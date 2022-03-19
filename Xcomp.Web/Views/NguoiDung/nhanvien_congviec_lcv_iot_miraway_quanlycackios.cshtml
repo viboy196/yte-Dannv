@@ -1,0 +1,55 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Vận hành Kios";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var tc = await AC.ToChuc.GetById(cv.IdToChuc);
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> Vận hành KIOS </h5>  
+
+                            
+                        </th>
+                    </tr>
+                
+                </thead>
+              
+                <tbody>
+                    @foreach (var kh in await AC.ToChuc.Get(tc.DS_DsId("TruocDsKhachHangMayTuPhucVu")))
+                    {
+                        foreach (var m in await AC.MayTuPhucVu.Get(kh.DS_DsId("DsIdMayTuPhucVuCuaToChuc")))
+                        {
+                             <tr>
+                                <td class="w-50">
+                                    <div>@m.Name <br/> @kh.Name - @m.LoaiMayTuPhucVu : </div>
+                                    
+                                 </td>
+                                <td class="w-50">
+                                    @foreach(var tn in await AC.TinhNangMayTuPhucVu.Get(m.DsIdTinhNangMayTuPhucVu))
+                                    {
+                                       <span>@tn.LoaiTinhNangMayTuPhucVu : @tn.Name</span>      <br/> 
+                                    }
+                                </td>
+                            </tr>
+                            
+                        }
+                       
+                    }
+
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

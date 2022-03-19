@@ -1,0 +1,60 @@
+﻿@using Xcomp.Data.TinhNang
+
+@{
+     Layout = "~/Views/Shared/_Layout_san.cshtml"; 
+     
+     var idsan = (string)TempData["idsan"];
+     TempData.Keep("idsan");
+     var san = await AC.San.GetById(idsan);
+     ViewData["Title"] = @san.Name;
+}
+
+
+
+
+    <section id="dichvu" >
+        
+        <div class="container-fluid mt-3">
+            <div class="row ">
+                
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@san.Name</li>
+                  </ol>
+                </nav>
+              
+            </div>
+            <div class="row">
+                @foreach (var h in await AC.HangHoa.Get(san.DsIdHangHoa))
+                {
+                    var tc = await AC.ToChuc.GetById(h.IdToChuc);
+                    <div class="col-md-4 d-flex">
+                        <div class="card w-100">
+                            @if (h.Anh != null)
+                            {
+                                <div class="divanh">
+                                    <img src="@h.Anh">
+                                </div>
+                            }
+                          <div class="card-body">
+                            <h5 class="card-title">@h.Name</h5>
+                            @Html.Raw(h.TomTat)
+                            <strong>Giá: </strong> <br>
+                            @Html.Raw(h.Gia)
+                            <strong>Liên hệ: </strong> <br>
+                            @Html.Raw(h.LienHe)
+                           
+                          </div>
+                           <div class="card-footer p-3"> 
+                              @tc.Name
+                          </div>
+                        </div>
+                    </div>
+
+                    
+                }
+            </div>
+        </div>
+    </section>
+ 

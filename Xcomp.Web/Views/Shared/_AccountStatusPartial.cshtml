@@ -1,0 +1,173 @@
+﻿@using Xcomp.Data.TinhNang
+
+@if(User.Identity.IsAuthenticated){
+    var nd = await AC.NguoiDung.GetById(User.Identity.Name);
+	var returnUrl = "/Account/Logout?returnUrl=" + (ViewBag.url == null ? Context.Request.Path : ViewBag.url);
+    if (nd != null)
+    {
+        
+        <div style="display:none" id="auth_nguoidungid">
+            @User.Identity.Name
+        </div>
+        <button class="btn btn-outline-primary me-2" onclick="show_thongbao(0)">
+            <i class="fa fa-bell text-danger"></i> <span id="soluongthongbaomoi">@(nd.SoLuongThongBaoNhanMoi >0?nd.SoLuongThongBaoNhanMoi.ToString():"")</span> 
+        </button>
+        
+        <div class="btn-group">
+            <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @nd.Name
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+
+                    <a class="dropdown-item" href="/nguoidung/user_home"><i class="fa fa-user"></i> Tài khoản</a>
+                </li>
+                <li>
+
+                    <a class="dropdown-item" href="/nguoidung/user_giaodich"><i class="fa fa-shopping-cart"></i> Giao dịch</a>
+                </li>
+                <li>
+
+                    <a class="dropdown-item" href="@returnUrl"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a>
+                </li>
+
+            </ul>
+        </div>
+    } else{
+        <div style="display:none" id="#auth_nguoidungid"></div>
+        <a class="dropdown-item" href="@returnUrl"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a>
+    }
+}
+else{
+    <div style="display:none" id="#auth_nguoidungid"></div>
+	<button class="btn btn-outline-primary" id="btnLogin"><i class="fa fa-sign-in-alt"></i> Đăng nhập</button>
+    <div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
+		<div class="cd-user-modal-container"> <!-- this is the container wrapper -->
+			<ul class="cd-switcher" style="padding-left: 0px;list-style-type: none;">
+				<li><a href="#0">Đăng nhập</a></li>
+				<li><a href="#0">Tạo tài khoản</a></li>
+			</ul>
+
+			<div id="cd-login"> <!-- log in form -->
+				<form class="cd-form">
+					<p class="fieldset">
+						<label class="image-replace cd-phone" for="signin-phone">Số điện thoại</label>
+						<input class="full-width has-padding has-border" id="signin-phone" type="phone" placeholder="Số điện thoại">
+						<span class="cd-error-message" id="login_phone_Err">Nhập số điện thoại</span>
+					</p>
+
+					<p class="fieldset">
+						<label class="image-replace cd-password" for="signin-password">Mật Khẩu</label>
+						<input class="full-width has-padding has-border" id="signin-password" type="password"  placeholder="Mật Khẩu">
+						
+						<span class="cd-error-message" id="login_pass_Err"></span>
+					</p>
+
+					<p class="fieldset">
+						<input type="checkbox" id="remember-me" checked>
+						<label for="remember-me">ghi nhớ</label>
+					</p>
+
+					<p class="fieldset">
+						<div class="d-grid gap-2">
+						  	<a  class="btn btn-primary btn-lg" id="form-login-submit" style="background:#5bc0de;border-color: #5bc0de;">Đăng nhập</a>
+						</div>
+						
+					</p>
+				</form>
+				
+				<p class="cd-form-bottom-message" >   <a href="#0">Bạn quên mật khẩu?</a></p>
+				<div class="text-center pb-5">
+					<a href="/home/index">Quay lại trang chủ</a>
+				</div>
+				<!-- <a href="#0" class="cd-close-form">Close</a> -->
+			</div> <!-- cd-login -->
+
+			<div id="cd-signup"> <!-- sign up form -->
+				<form class="cd-form">
+
+					
+					<p class="fieldset">
+						<label class="image-replace cd-name" >Họ và tên</label>
+						<input class="full-width has-padding has-border" id="signup-name" value="Nguyễn Văn Đàn"  placeholder="Họ và tên">
+						<span class="cd-error-message" id="signup_name_err">Nhập họ và tên!</span>
+					</p>
+					<p class="fieldset">
+						<label class="image-replace cd-phone">Số điện thoại</label>
+						<input class="full-width has-padding has-border" id="signup-phone" type="number" value="0962635719" placeholder="Số điện thoại">
+						<span class="cd-error-message" id="signup_phone_err">Nhập số điện thoại!</span>
+					</p>
+
+					<p class="fieldset">
+						<label class="image-replace cd-password" >Mật khẩu</label>
+						<input class="full-width has-padding has-border" id="signup-password" type="password" value="1" placeholder="Mật khẩu">
+						
+						<span class="cd-error-message" id="signup_pass_err">Nhập mật khẩu</span>
+					</p>
+					<p class="fieldset">
+						<label class="image-replace cd-password">Nhập lại mật khẩu</label>
+						<input class="full-width has-padding has-border" id="signup-password-redo" type="password" value="1"  placeholder="Nhập lại mật khẩu">
+						
+						<span class="cd-error-message" id="signup_pass_redo_err">Nhập lại mật khẩu!</span>
+					</p>
+
+					<p class="fieldset">
+						<input type="checkbox" id="accept-terms">
+						<label for="accept-terms">Đồng ý với <a href="#0">chính sách</a></label>
+					</p>
+
+					<p class="fieldset">
+						<div class="d-grid gap-2">
+						<a  class="btn btn-primary btn-lg" id="form-creat-submit" style="background:#5bc0de;border-color: #5bc0de;">tạo tài khoản</a>
+						</div>
+					</p>
+				</form>
+
+				<!-- <a href="#0" class="cd-close-form">Close</a> -->
+			</div> <!-- cd-signup -->
+
+			<div id="cd-reset-password"> <!-- reset password form -->
+				<p class="cd-form-message">Quên mật khẩu , nhập số điện thoại để lấy lại</p>
+
+				<form class="cd-form">
+					<p class="fieldset">
+						<label class="image-replace cd-email" for="reset-phone">Số điện thoại</label>
+						<input class="full-width has-padding has-border" id="reset-phone" type="number" placeholder="Số điện thoại">
+						<span class="cd-error-message">Nhập số điện thoại!</span>
+					</p>
+
+					<p class="fieldset">
+						<div class="d-grid gap-2">
+						<a  class="btn btn-primary btn-lg" id="form-reset-password-submit" style="background:#5bc0de;border-color: #5bc0de;">Xác nhận</a>
+						</div>
+					</p>
+					
+				</form>
+
+				<p class="cd-form-bottom-message"><a href="#0">Quay lại Đăng nhập</a></p>
+			</div> <!-- cd-reset-password -->
+			<div id="cd-active-account"> <!-- reset password form -->
+				<p class="cd-form-message">Nhập OTP để kích hoạt tài khản</p>
+
+				<form class="cd-form">
+					<p class="fieldset">
+						<label class="image-replace cd-email" for="reset-phone">Nhập OTP</label>
+						<input class="full-width has-padding has-border" id="input-activate-code" type="text" placeholder="Nhập OTP">
+						<span class="cd-error-message" id="activate_code_err">Nhập OTP</span>
+					</p>
+
+					<p class="fieldset">
+						<div class="d-grid gap-2">
+						<a  class="btn btn-primary btn-lg" id="form-activate-account-submit" style="background:#5bc0de;border-color: #5bc0de;">Xác nhận</a>
+						</div>
+					</p>
+					
+				</form>
+
+				<p class="cd-form-bottom-message"><a href="#0">Quay lại Đăng nhập</a></p>
+			</div> <!-- cd-reset-password -->
+
+			<a href="#0" class="cd-close-form">Đóng</a>
+		</div> <!-- cd-user-modal-container -->
+	</div> <!-- cd-user-modal -->
+}

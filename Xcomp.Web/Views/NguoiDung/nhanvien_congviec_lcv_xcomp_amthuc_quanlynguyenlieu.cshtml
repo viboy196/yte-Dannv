@@ -1,0 +1,75 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Quản nguyên liệu";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=3 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý NGUYÊN LIỆU</h5>  
+
+                            
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>                               
+                            Loại nguyên liệu
+                        </th>
+                        
+                        <th>
+                            Nguyên liệu, giống, bộ phận    
+                        </th>
+                    </tr>
+                
+                </thead>
+               <tbody>
+                    @foreach(var lnl in await AC.LoaiNguyenLieu.GetAll())
+                    {
+                        
+                        <tr>
+                            <td>                               
+                               @lnl.Name <br/>
+                                                       
+                            </td>
+                             <td>
+                               @foreach (var nl in await AC.NguyenLieu.Get(lnl.DsIdNguyenLieu))
+                               {
+                                    <div>Nguyên liệu: @nl.Name </div>
+                                     <div class="ps-5">
+                                        @foreach (var gnl in await AC.GiongNguyenLieu.Get(nl.DsIdGiongNguyenLieu))
+                                        {
+                                            <div> Giống: @gnl.Name </div> 
+                                              
+                                        }
+                                    </div>
+                                    <div class="ps-5">
+                                       @foreach (var bpnl in await AC.BoPhanNguyenLieu.Get(nl.DsIdBoPhanNguyenLieu))
+                                        {
+                                            <div> Bộ phận: @bpnl.Name </div> 
+                                              
+                                        }
+                                    </div>
+                               }
+
+                            </td>
+                            
+                        </tr>
+                    }
+                    
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

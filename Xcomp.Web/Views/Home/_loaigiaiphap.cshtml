@@ -1,0 +1,23 @@
+﻿@using Xcomp.Data.TinhNang
+
+@{
+    var dsidlgp = (List<string>)ViewBag.dsidlgp;
+}
+
+<div class="ps-5"> 
+    @foreach (var lgp in await AC.LoaiGiaiPhap.Get(dsidlgp))
+    {
+        <div>LGP: @lgp.Name</div>
+        <div class="ps-5">
+            @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+            {
+                <div>LCV: @lcv.Name</div>
+                <div class="ps-5">
+
+                </div>
+            }
+        </div>
+    }
+</div>
+
+

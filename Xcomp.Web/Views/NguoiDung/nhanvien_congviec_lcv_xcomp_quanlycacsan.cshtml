@@ -1,0 +1,92 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Quản lý sàn";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=3 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý SÀN</h5>  
+
+                            
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>                               
+                            Loại sàn
+                        </th>
+                        <th>
+                            Loại dịch vụ     
+                        </th>
+                        <th>
+                            Sàn     
+                        </th>
+                    </tr>
+                
+                </thead>
+               <tbody>
+                    @foreach(var ls in await AC.LoaiSan.GetAll())
+                    {
+                        
+                        <tr>
+                            <td>                               
+                               @ls.Name <br/>
+                               <div class="ps-5">
+                                    
+                                   @foreach(var ht in await AC.HeThong.Get(ls.DS_DsId("Mua")))
+                                    {
+                                        <div>Hệ thống mua: @ht.Name</div>  
+                                    } 
+                                    @foreach(var ht in await AC.HeThong.Get(ls.DS_DsId("Ban")))
+                                    {
+                                        <div>Hệ thống bán: @ht.Name</div>  
+                                    } 
+                               </div>                                
+                            </td>
+                             <td>
+                                @foreach(var ldv in await AC.LoaiDichVu.Get(ls.DsIdLoaiDichVu))
+                                {
+                                     @ldv.Name <br />
+                                     <div class="ps-5">
+                                       
+                                       @foreach(var lhh in await AC.LoaiHangHoa.Get(ldv.DsIdLoaiHangHoa))
+                                        {
+                                           <div>Loại hàng:  @lhh.Name</div>
+                                             
+                                        } 
+                                    </div>
+                                }       
+                            </td>
+                            <td>
+                                @foreach(var s in await AC.San.GetByCode(ls.Code))
+                                {
+                                     @s.Name <br />
+                                     <div class="ps-5">
+                                       
+                                       @foreach(var tc in await AC.ToChuc.Get(s.DsIdToChuc))
+                                        {
+                                            <div>Tổ chức: @tc.Name</div>
+                                        } 
+                                    </div>
+                                }       
+                            </td>
+                        </tr>
+                    }
+                    
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

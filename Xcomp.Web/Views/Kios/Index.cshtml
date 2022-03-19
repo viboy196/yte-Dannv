@@ -1,0 +1,51 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_Kios.cshtml";
+    ViewData["Title"] = "Kios";
+    
+}
+
+@if (ViewBag.id =="")
+{
+    var dsm = await AC.MayTuPhucVu.GetAll();
+    <div class="mh position-relative">        
+        <div class="position-absolute top-50 start-50 translate-middle text-center">
+            <img src="/Files/LOGO_MIRAWAY_ver2-01.svg" style="width:250px;"  />
+            <div class="card text-white bg-primary mb-3 text-center" >
+                <div class="card-header ">CHỌN DÒNG KIOS SỬ DỤNG</div>
+                <ul class="list-group">
+                    @foreach(var m in dsm)
+                    {
+                        <li class="list-group-item">
+                            <a href="/kios/index/@m.Id">@m.LoaiMayTuPhucVu</a>    
+                        </li>
+                    }
+          
+                </ul>
+            </div>    
+        </div>      
+    </div>
+
+} else
+{
+    var m = await AC.MayTuPhucVu.GetById((string)ViewBag.id);
+    var tc = await AC.ToChuc.GetById(m.Truong_View("IdToChucKhachHang"));
+    <div class="mh position-relative">        
+        <div class="position-absolute top-50 start-50 translate-middle text-center">
+            <div class="mb-5">
+                <h1>@tc.Name.ToUpper()</h1> 
+            </div>
+            <div>
+                @foreach(var tn in await AC.TinhNangMayTuPhucVu.Get(m.DsIdTinhNangMayTuPhucVu))
+                {
+                    <button class=" btn btn-outline-secondary m-4" style="width:200px; height:200px;"> <h3>@tn.LoaiTinhNangMayTuPhucVu.ToUpper()</h3> </button>
+                }
+            </div>
+           
+    
+        </div>      
+    </div>
+}
+

@@ -1,0 +1,69 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model PhanSuRequest
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Tạo phận sự nhóm";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);    
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+    var dsnv = await AC.Nhom.Get(pb.DsIdNhom);
+    var ps = await AC.PhanSu.GetById(Model.IdPhanSu);
+}
+
+
+
+<section id="congviec" style="padding-top:60px;">
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+              
+        <div class="col-md-4">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    TẠO PHẬN SỰ 
+                </div>
+                <div class="card-body text-start">
+
+                    @using (Html.BeginForm("nhanvien_congviec_lcv_anninh_baove_xaydungnhansuphongbaove_phansu_nhom_create", "nguoidung", FormMethod.Post))
+                    {
+                        
+                        <input hidden type="text" class="form-control" id="IdPhanSu" name="IdPhanSu" value="@Model.IdPhanSu">
+                        <input hidden type="text" class="form-control" id="IdCongViec" name="IdCongViec" value="@Model.IdCongViec">
+                         <div class="mb-3">
+                            
+                            <label  class="form-label">Phòng ban: @pb.Name</label> <br/>
+                           <label  class="form-label">Phận sự: @ps.Name</label> <br/>
+                            <label for="Ten" class="form-label">Nhóm</label>
+                            <select id="IdNhom" name="IdNhom" class="form-select">
+                                @foreach(var l in dsnv)
+                                {
+                                    if (l.Id == Model.IdNhom)
+                                        {
+                                            <option selected value="@l.Id">@l.Name</option>
+                                        } else
+                                        {
+                                            <option value="@l.Id">@l.Name</option>
+                                        }
+                                        
+                                }
+                                    
+                            </select>
+                            @if(ViewBag.ErrNhanVien != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrNhanVien</span>
+                            }
+                                    
+                        </div>
+                              
+                             
+                        <button type="submit" class="btn btn-primary">Tạo phận sự</button>
+                    }
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

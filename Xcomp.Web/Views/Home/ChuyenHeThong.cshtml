@@ -1,0 +1,21 @@
+﻿@using Xcomp.Data.TinhNang
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Trung tâm";
+}
+
+<style>
+</style>
+
+<section id="hearder" style="padding-top:60px;">  
+    <div class="container-fluid">
+        <div class="row">
+            @foreach (var ht in await AC.HeThong.GetAll())
+            {
+                <div class="col-md-4">
+                    <a href="/home/go/@ht.Id">@ht.Name</a>
+                </div>
+            }
+        </div>
+    </div>
+</section>

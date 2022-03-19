@@ -1,0 +1,21 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@{
+    var dsls = await AC.LoaiSan.Get(SystemInfo.HeThong.DS_DsId("Mua"));
+}
+
+@if (dsls.Count > 0)
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="nguoidungDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dịch vụ
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            @foreach (var ls in dsls)
+            {
+                <li><a class="dropdown-item" href="/san/index?idls=@ls.Id">@ls.Name</a></li>
+            }
+        </ul>
+    </li>
+}
+

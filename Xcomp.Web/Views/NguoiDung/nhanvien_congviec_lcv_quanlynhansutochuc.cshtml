@@ -1,0 +1,196 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Quản lý nhân viên";
+    var cvnv = await AC.CongViec.GetById((string)ViewBag.id);
+    var gpp = await AC.GiaiPhap.GetById(cvnv.IdGiaiPhap);
+    var tc = await AC.ToChuc.GetById(cvnv.IdToChuc);
+    var ltc = await AC.LoaiToChuc.GetByCode(tc.CodeLoaiToChuc);
+    var dslgp = new List<string>();
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> TỔ CHỨC : @tc.Name</h5>  
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="w-50">
+                            <a class="" href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_tochuc_update/@ViewBag.id" data-bs-toggle="tooltip" data-bs-placement="top" title="Update thông tin tổ chức">@tc.Name</a>
+                            <br/>
+                            <span class="text-muted"> 
+                            <a  data-bs-toggle="tooltip" title="Thông tin về @ltc.Name" href="/nguoidung/tochuc_huongdan#ltc-@ltc.Id" class="text-reset">@ltc.Name</a>
+                            </span> <br/>
+                                   
+                            @* [@CheckFormat.TenTrangThaiToChuc(@tc.TrangThai)]<br/>*@
+                            @if (tc.IdToChucMe != null)
+                            {
+                                <span class="text-muted"> Tổ chức me: @((await AC.ToChuc.GetById(tc.IdToChucMe)).Name)</span> <br />
+                            }
+                            @if (tc.GioiThieu != null)
+                            {
+                                @tc.GioiThieu <br />
+                            }
+
+                             <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_nhanvien_create/@ViewBag.id" data-bs-toggle="tooltip" data-bs-placement="top" title="Tạo mới nhân viên quản lý tổ chức">
+                                        <i class="fa fa-plus"></i>  Tạo nhân viên tổ chức
+                                    </a> <br />
+                           
+                            @foreach (var gp in await AC.GiaiPhap.Get(tc.DsIdGiaiPhap))
+                                {
+                                    var lgp = await AC.LoaiGiaiPhap.GetByCode(gp.CodeLoaiGiaiPhap);
+                                    dslgp.Add(gp.CodeLoaiGiaiPhap);
+                                    <div> Giải pháp: @gp.LoaiGiaiPhap</div>
+                                    <div class="ps-5">
+                                        @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                        {                                                    
+                                            <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_congviec_create?id=@ViewBag.Id&idlcv=@lcv.Id&idgp=@gp.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Giao việc cho nhân viên"> <i class="fas fa-plus"></i> Giao việc: @lcv.Name</a> <br /> 
+                                        }
+                                    </div>
+                                }
+                                @foreach (var lgp in await AC.LoaiGiaiPhap.Get(ltc.DsIdLoaiGiaiPhap))
+                                {
+                                    if (dslgp.IndexOf(lgp.Code) <0)
+                                    {
+                                        <a  href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_giaiphap_create?id=@ViewBag.id&idlgp=@lgp.Id&idtc=@tc.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Sử dụng giải pháp cho tổ chức">  <i class="fas fa-plus"></i> Dùng giải pháp: @lgp.Name</a>
+
+                                        <div class="ps-5">
+                                            @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                            {
+                                                <div>Công việc: @lcv.Name</div>
+                                                        
+                                            }
+                                        </div>
+                                    }
+                                            
+                                }
+                           
+                           
+                            
+                            @foreach (var lpb in await AC.LoaiPhongBan.Get(ltc.DsIdLoaiPhongBan))
+                            {
+                                <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_phongban_create?id=@ViewBag.id&idlpb=@lpb.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Tạo phòng ban"> <i class="fas fa-plus"></i> Tạo Phòng ban: @lpb.Name</a> <br /> 
+                            }
+                        </td>
+                        <td class="w-50">
+                           
+                            @foreach (var nv in  await AC.NhanVien.Get(tc.DsIdNhanVienToChuc))
+                            {
+                                <a data-bs-toggle="tooltip" title="Update thông tin nhân viên @nv.Name" href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_nhanvien_update?id=@ViewBag.id&idnv=@nv.Id">@nv.VaiTro. @nv.Name</a> <br />
+                                <div class="ps-4">
+                                    @foreach (var cv in await AC.CongViec.Get(nv.DsIdCongViec))
+                                    {
+                                                
+                                        <a data-bs-toggle="tooltip" title="Update thông tin công việc @cv.LoaiCongViec" href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_congviec_update?id=@ViewBag.id&idcv=@cv.Id"> Làm việc: @cv.LoaiCongViec</a> 
+                                        @*<span>  [@CheckFormat.TenTrangThaiCongViec(cv.TrangThai)]</span>*@    <br />
+                                    }
+                                </div>
+                            
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            
+            </table>
+
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=3 class="">
+                             <h5 class="float-start pt-1 mb-0"> PHÒNG BAN </h5>  
+                            
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                    @foreach (var pb in await AC.PhongBan.Get(tc.DsIdPhongBan))
+                    {
+                        var lpb = await AC.LoaiPhongBan.GetByCode(pb.CodeLoaiPhongBan);
+                        var dsgppb = new List<string>();
+                        <tr>
+                            <td class="w-50">
+                                <a  data-bs-toggle="tooltip" title="" href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_phongban_update?id=@ViewBag.id&idpb=@pb.Id" > @pb.Name </a> 
+                                <div class="text-muted"> @lpb.Name </div> 
+                                 
+                                @if (pb.IdPhongBanMe != null)
+                                {
+                                    <span class="text-muted"> Phòng ban mẹ: @((await AC.PhongBan.GetById(pb.IdPhongBanMe)).Name)</span> <br />
+                                }
+                              <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_nhanvien_create?id=@ViewBag.id&idpb=@pb.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Tạo mới nhân viên phòng ban">
+                                        <i class="fa fa-plus"></i>  Tạo nhân viên cho phòng ban
+                                    </a>  
+                            <div class="mb-3"> 
+                                @foreach (var gp in await AC.GiaiPhap.Get(pb.DsIdGiaiPhap))
+                                {
+                                    var lgp = await AC.LoaiGiaiPhap.GetByCode(gp.CodeLoaiGiaiPhap);
+                                    dsgppb.Add(lgp.Code);
+                                    <div>Giải pháp: @gp.LoaiGiaiPhap</div>
+                                    <div class="ps-5">
+                                        @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                        {
+
+                                            <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_congviec_create?id=@ViewBag.Id&idlcv=@lcv.Id&idgp=@gp.Id"> <i class="fas fa-plus"></i> Giao việc: @lcv.Name</a> <br />                                                    
+
+                                            
+                                        }
+                                    </div>
+                                }
+
+                                @foreach (var lgp in await AC.LoaiGiaiPhap.Get(lpb.DsIdLoaiGiaiPhap))
+                                {
+                                    if (dsgppb.IndexOf(lgp.Code) <0)
+                                    {
+
+                                        <a  href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_giaiphap_create?id=@ViewBag.id&idlgp=@lgp.Id&idpb=@pb.Id">  <i class="fas fa-plus"></i> Dùng giải pháp: @lgp.Name</a>
+
+
+                                        <div class="ps-5">
+                                            @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                            {
+                                                <div>Công việc: @lcv.Name</div>
+                                                <div class="ps-5">
+
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                            
+                                }
+                            </div>
+                            </td>
+                            <td class="w-50">
+                                @foreach (var nv in  await AC.NhanVien.Get(pb.DsIdNhanVien))
+                                {
+                                    <a data-bs-toggle="tooltip" title="Update thông tin nhân viên @nv.Name" href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_nhanvien_update?id=@ViewBag.id&idnv=@nv.Id">@nv.VaiTro. @nv.Name</a> <br />
+                                    <div class="ps-4">
+                                        @foreach (var cv in await AC.CongViec.Get(nv.DsIdCongViec))
+                                        {
+                                            var lcv = await AC.LoaiCongViec.GetByCode(cv.CodeLoaiCongViec);
+                                            <a data-bs-toggle="tooltip" title="Update thông tin công việc @cv.LoaiCongViec" href="/nguoidung/nhanvien_congviec_lcv_quanlynhansutochuc_congviec_update?id=@ViewBag.id&idcv=@cv.Id"> Làm việc: @lcv.Name</a> 
+                                            @*<span>  [@CheckFormat.TenTrangThaiCongViec(cv.TrangThai)]</span>*@    <br />
+                                        }
+                                    </div>
+                            
+                                }
+                            </td>
+                          
+                        </tr>
+                                        
+                    }
+                </tbody>
+            
+            </table>
+        </div>
+<div>
+
+

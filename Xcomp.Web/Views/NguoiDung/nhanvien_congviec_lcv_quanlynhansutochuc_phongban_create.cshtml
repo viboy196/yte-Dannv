@@ -1,0 +1,62 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model PhongBanRequest
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Tạo phòng ban";
+    var cv = await AC.CongViec.GetById(Model.IdCongViec);
+    var lpb = await AC.LoaiPhongBan.GetById(Model.IdLoaiPhongBan);
+    var tc = await AC.ToChuc.GetById(cv.IdToChuc);
+}
+
+
+
+<section id="congviec" style="padding-top:60px;">
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+              
+        <div class="col-md-4">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    TẠO PHÒNG BAN  
+                </div>
+                <div class="card-body text-start">
+
+                    @using (Html.BeginForm("nhanvien_congviec_lcv_quanlynhansutochuc_phongban_create", "nguoidung", FormMethod.Post))
+                    {
+                        <input hidden type="text" class="form-control" id="IdToChuc" name="IdToChuc" value="@tc.Id">
+                        <input hidden type="text" class="form-control" id="IdCongViec" name="IdCongViec" value="@Model.IdCongViec">
+                        <input hidden type="text" class="form-control" id="IdLoaiPhongBan" name="IdLoaiPhongBan" value="@Model.IdLoaiPhongBan">
+                        <div class="mb-3">
+                            <label  class="form-label">Tổ chức: @tc.Name</label> <br/>
+                            <label  class="form-label">Loại phòng ban: @lpb.Name</label> <br/>
+                            <label for="Ten" class="form-label">Tên phòng ban</label>
+                            <input type="text" class="form-control" id="Ten" name="Ten" value="@Model.Ten">
+                                @if(ViewBag.ErrTen != null)
+                                {
+                                    <span class="text-danger" >@ViewBag.ErrTen</span>
+                                }
+                                    
+                        </div>
+                        
+                        
+                        <div class="mb-3 text-start">
+                        <label for="GioiThieu" class="form-label">Giới thiệu</label>
+
+                        <textarea id="GioiThieu" name="GioiThieu" class="form-control">@Model.GioiThieu</textarea>
+                               
+                        </div>
+                              
+                             
+                        <button type="submit" class="btn btn-primary">Tạo mới</button>
+                    }
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

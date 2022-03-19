@@ -1,0 +1,94 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Quản lý sàn";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=3 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý HỆ THỐNG</h5>  
+
+                            
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>                               
+                            Hệ thống
+                        </th>
+                        
+                        <th>
+                            Loại tổ chức     
+                        </th>
+                    </tr>
+                
+                </thead>
+               <tbody>
+                    @foreach(var ht in await AC.HeThong.GetAll())
+                    {
+                        
+                        <tr>
+                            <td>                               
+                               @ht.Name <br/>
+                                                       
+                            </td>
+                             <td>
+                               @foreach (var ltc in await AC.LoaiToChuc.Get(ht.DsIdLoaiToChuc))
+                               {
+                                    <div>Tổ chức: @ltc.Name </div>
+                                     <div class="ps-5">
+                                        @foreach (var lgp in await AC.LoaiGiaiPhap.Get(ltc.DsIdLoaiGiaiPhap))
+                                        {
+                                            <div> Giải pháp: @lgp.Name </div> 
+                                            <div class="ps-5">
+                                                @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                                {
+                                                    <div> Công việc: @lcv.Name </div> 
+                                                
+                                                }
+                                            </div>    
+                                        }
+                                    </div>
+                                    <div class="ps-5">
+                                        @foreach (var lpb in await AC.LoaiPhongBan.Get(ltc.DsIdLoaiPhongBan))
+                                           {
+                                                <div> Phòng ban: @lpb.Name </div> 
+                                                <div class="ps-5">
+                                                    @foreach (var lgp in await AC.LoaiGiaiPhap.Get(lpb.DsIdLoaiGiaiPhap))
+                                                       {
+                                                            <div> Giải pháp: @lgp.Name </div> 
+                                                             <div class="ps-5">
+                                                                @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                                                {
+                                                                    <div> Công việc: @lcv.Name </div> 
+                                                
+                                                                }
+                                                            </div>    
+                                                
+                                                       }
+                                                </div>
+                                           }
+                                    </div>
+                               }
+
+                            </td>
+                            
+                        </tr>
+                    }
+                    
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

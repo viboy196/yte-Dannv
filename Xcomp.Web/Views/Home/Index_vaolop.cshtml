@@ -1,0 +1,127 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Y TẾ MỚI";
+}
+
+<style>
+    
+
+</style>
+<section id="hearder" style="padding-top:60px;">  
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 d-flex">
+                <div class="w-100 align-items-center row">
+                    <div class="col text-center p-lg-5">
+                     <img style="width:100px;" class="pb-4" src="~/Files/ytemoilogo.png" />
+                      <h5>Vào lớp - GIẢI PHÁP KẾT NỐI MỌI NGƯỜI VỚI MỌI NGUỒN LỰC Y TẾ CỦA XÃ HỘI    </h5>
+                      <p class=""> Y tế mới là các giải pháp giúp App tiện ích của người dùng kết nối thẳng tới ERP doanh nghiệp thông qua các Sàn giao dịch để cải thiện dần các vấn đề y tế.   
+                      </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex">
+                <img class="w-100" src="~/Files/fluent_hero2.png" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="thongke">
+    <div class="container pt-4 pb-4">
+        <div class="row justify-content-md-center">
+            
+
+             <div class="col-sm-6 col-xl-3">
+				<div class="d-flex justify-content-center align-items-center p-4 bg-danger bg-opacity-10 rounded-3">
+					<span class="display-6 lh-1 text-danger mb-0"><i class="fas fa-stethoscope"></i></span>
+					<div class="ms-4 h6 fw-normal">
+						<div class="d-flex">
+							<h5 class="purecounter mb-0 fw-bold">90</h5>
+							<span class="mb-0 h5">K+</span>
+						</div>
+						<p class="mb-0"> Khám chữa/tháng</p>
+					</div>
+				</div>
+			</div>
+
+            <div class="col-sm-6 col-xl-3">
+				<div class="d-flex justify-content-center align-items-center p-4 bg-success bg-opacity-10 rounded-3">
+					<span class="display-6 lh-1 text-success mb-0"><i class="fas fa-user-md"></i></span>
+					<div class="ms-4 h6 fw-normal">
+						<div class="d-flex">
+							<h5 class="purecounter mb-0 fw-bold">20</h5>
+							<span class="mb-0 h5">K+</span>
+						</div>
+						<p class="mb-0"> Nhân viên y tế</p>
+					</div>
+				</div>
+			</div>
+
+            <div class="col-sm-6 col-xl-3">
+				<div class="d-flex justify-content-center align-items-center p-4 bg-primary bg-opacity-10 rounded-3">
+					<span class="display-6 lh-1 text-primary mb-0"><i class="fas fa-hospital"></i></span>
+					<div class="ms-4 h6 fw-normal">
+						<div class="d-flex">
+							<h5 class="purecounter mb-0 fw-bold">800</h5>
+							<span class="mb-0 h5">+</span>
+						</div>
+						<p class="mb-0">Cơ sở y tế</p>
+					</div>
+				</div>
+			</div>
+
+        </div>
+    </div>
+</section>
+
+<div class="container">
+  
+    <div class = "row justify-content-md-center mb-4">
+        <div class="col-12 text-center p-5">
+             <h3> SÀN GIÁO DỤC </h3>
+        </div>
+
+        @foreach (var ls in await AC.LoaiSan.Get(SystemInfo.HeThong.DS_DsId("Mua")))
+        {
+            var dss = await AC.San.GetByCode(ls.Code);
+            
+            if (dss != null && dss.Count > 0)
+            {
+                <div class="col-md-4 d-flex mb-4 click"  >
+                <div class="card w-100">
+                    <div class="card-header justify-content-between align-items-center">
+                        @ls.Name 
+                        <span class="badge bg-primary rounded-pill">@dss.Count sàn</span>
+                    </div>
+                   <div class="list-group">
+                        @foreach(var s in dss)
+                        {
+                            <a href="/san/index?id=@s.Id" class="list-group-item d-flex justify-content-between align-items-center">
+                                @s.Name
+                                @if (s.DsIdDichVu != null && s.DsIdDichVu.Count > 0)
+                                    {
+                                         <span class="badge bg-primary rounded-pill">@s.DsIdDichVu.Count</span>
+                                    }
+                            </a>
+                                        
+                        }              
+                    </div>   
+                  
+                 
+                </div>
+            </div>
+            }
+            
+        }
+        
+        
+        
+    </div>
+   
+  
+  
+</div>
+

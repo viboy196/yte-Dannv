@@ -1,0 +1,101 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Công việc";
+    var nd = User.Identity.IsAuthenticated?await AC.NguoiDung.GetById(User.Identity.Name):null;
+}
+
+@if (nd!= null)
+{
+   
+    var dsnv = await AC.NhanVien.Get(nd.DsIdNhanVien);
+    var dstbcv = new List<CongViec>();
+
+    <section id="congviec" style="padding-top:60px;">
+  
+        <div class="container-fluid mt-3">
+            @foreach(var nv in dsnv)
+                {
+                    var dscv = await AC.CongViec.Get(nv.DsIdCongViec);
+                    dstbcv.AddRange(dscv);
+                    
+                }
+
+            @if (dstbcv.Count > 0)
+            {
+                dstbcv = dstbcv.OrderBy(c => c.UpdatedAt).ToList();
+                                 
+                <div class="row">
+                    @foreach(var cv in dstbcv)
+                    {
+                        if (cv.IdHeThong == SystemInfo.HeThong.Id)
+                        {
+                            var nv = await AC.NhanVien.GetById(cv.IdNhanVien);
+                            var tc = await AC.ToChuc.GetById(cv.IdToChuc);
+                            <div class="col-md-6 d-flex">
+                                <div class="card mb-4 w-100">
+                                    <div class="card-header d-flex justify-content-between align-items-center p-2">
+                                        <span>
+                                            @cv.LoaiCongViec  
+                                            @if (cv.SoLuongThongBaoNhanMoi != 0)
+                                            {
+                                                <span class="badge bg-danger rounded-pill">@cv.SoLuongThongBaoNhanMoi</span>
+                                            }
+                                        </span>
+                                        @if (cv.ThucHien == null || cv.ThucHien.IndexOf("WEB")>=0)
+                                        {
+                                            <a style="width:100px;" href="/nguoidung/nhanvien_lamviec/@cv.Id" class="btn btn-primary btn-sm float-end ms-4">
+                                                Làm việc
+                                            </a>
+
+                                             @*<a style="width:100px;" href="/nguoidung/nhanvien_lamviec_mobile/@cv.Id" class="btn btn-primary btn-sm float-end ms-4">
+                                                Mobile
+                                            </a>*@
+                                        }
+                                    
+                                    </div>
+
+
+                                     <ul class="list-group">
+                                        <li class="list-group-item border-0">
+                                                Nhân viên: @nv.VaiTro. @nv.Name <br>
+                                                @if (cv.IdPhongBan != null)
+                                                {
+                                                    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+                                                    <span> Phòng ban: @pb.Name</span> <br />
+                                                }
+                                                Tổ chức: @tc.Name 
+                
+                                        </li>
+                                        @foreach(var tb in await AC.ThongBao.Get(cv.DsIdThongBaoNhan))
+                                        {
+                                       
+                                            <li class="list-group-item "  id="cv-vtb-@tb.Id">
+                                                 @Html.Partial("_thongbao",new ViewDataDictionary(ViewData){
+                                                                                   {"tb",tb}
+                                                                               })
+                
+                                            </li>
+                                        }
+        
+                                    </ul>
+                                       
+                                </div>
+                            </div>
+                        }
+                        
+                        
+                    }
+                </div>
+
+                
+            }
+
+            
+        </div>
+       
+   
+    </section>
+} 

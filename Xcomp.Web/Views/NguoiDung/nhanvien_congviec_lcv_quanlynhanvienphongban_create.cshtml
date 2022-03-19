@@ -1,0 +1,77 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model NhanVienRequest
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Tạo nhân viên phòng ban";
+}
+
+
+
+<section id="congviec" style="padding-top:60px;">
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+              
+        <div class="col-md-4">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    TẠO NHÂN VIÊN CHO PHÒNG BAN 
+                </div>
+                <div class="card-body text-start">
+
+                    @using (Html.BeginForm("nhanvien_congviec_lcv_quanlynhanvienphongban_create", "nguoidung", FormMethod.Post))
+                    {
+                        <input hidden type="text" class="form-control" id="IdToChuc" name="IdToChuc" value="@Model.IdToChuc">
+                        <input hidden type="text" class="form-control" id="IdPhongBan" name="IdPhongBan" value="@Model.IdPhongBan">
+                        <input hidden type="text" class="form-control" id="IdCongViec" name="IdCongViec" value="@Model.IdCongViec">
+                        <div class="mb-3">
+                        <label for="Ten" class="form-label">Tên nhân viên</label>
+                        <input type="text" class="form-control" id="Ten" name="Ten" value="@Model.Ten">
+                            @if(ViewBag.ErrTen != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrTen</span>
+                            }
+                                    
+                        </div>
+                         <div class="mb-3">
+                        <label for="VaiTro" class="form-label">Chức danh/Vai trò</label>
+                        <input type="text" class="form-control" id="VaiTro" name="VaiTro" value="@Model.VaiTro">
+                            @if(ViewBag.ErrVaiTro != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrVaiTro</span>
+                            }
+                                    
+                        </div>
+                        <div class="mb-3">
+                        <label for="SoDienThoai" class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="SoDienThoai" name="SoDienThoai" value="@Model.SoDienThoai">
+                            @if(ViewBag.ErrSoDienThoai != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrSoDienThoai</span>
+                            }
+                                    
+                        </div>
+                        
+
+                        <div class="mb-3 text-start">
+                        <label for="GioiThieu" class="form-label">Giới thiệu</label>
+
+                        <textarea id="GioiThieu" name="GioiThieu" class="form-control">@Model.GioiThieu</textarea>
+                                
+                                
+                                
+                        </div>
+                              
+                             
+                        <button type="submit" class="btn btn-primary">Tạo mới</button>
+                    }
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

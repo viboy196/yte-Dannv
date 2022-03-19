@@ -1,0 +1,83 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Tài chính phòng ban";
+     var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var gp = await AC.GiaiPhap.GetById(cv.IdGiaiPhap);
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);    
+}
+
+<section id="congviec" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan=3 class="">
+                         <h5 class="float-start pt-1 mb-0"> Tài chính </h5>                   
+                         <a href="#" class="btn btn-primary btn-sm float-end"> <i class="fa fa-plus"></i>  <i class="fa fa-user"></i></a>
+                    </th>
+                </tr>
+                
+            </thead>
+            <tbody>
+              
+                  @foreach(var bn in await AC.DoiTuong.Get(pb.DS_DsId("DsPhongBanDoiTuong")))
+                {
+                    <tr>
+                        <td>@bn.Name</td>
+                        <td>
+                            @foreach(var ca in await AC.Ca.Get(bn.DsIdCa))
+                            {
+                                <table>
+                                    <tr>
+                                        <th>
+                                            Thông tin ca:
+                                        </th>
+                                        <td>
+                                            @ca.LoaiCa
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Giao dịch: 
+                                        </th>
+                                        <td>
+                                            @foreach (var gd in await AC.GiaoDich.Get(ca.DsIdGiaoDich))
+                                            {
+                                                var hh = await AC.HangHoa.GetById(gd.IdHangHoa);
+                                                <div>
+                                                    @hh.Name
+                                                </div>
+                                                foreach (var tt in await AC.ThanhToan.Get(gd.DsIdThanhToan))
+                                                {
+                                                    
+                                                    <div>
+                                                        @tt.LyDo (@tt.SoTienDaThanhToan.ToString("N0")/@tt.SoTienPhaiThanhToan.ToString("N0"))
+                                                    </div>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                                
+                                    
+
+                                
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-primary" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Cập nhật thông tin bệnh nhân">
+                                <i class="fa fa-edit"></i> 
+                           </a>
+                        </td>
+                    </tr>
+                }
+                            
+            </tbody>
+        </table>
+   </div>
+
+

@@ -1,0 +1,128 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model ToChucRequest
+@{
+    Layout = "~/Views/Shared/_Layout_ToChuc.cshtml";
+    ViewData["Title"] = "Cập nhật thông tin tổ chức";
+    var tct = await AC.ToChuc.GetById(Model.Id);
+    var nd = User.Identity.IsAuthenticated?await AC.NguoiDung.GetById(User.Identity.Name):null;
+}
+
+@if (nd != null)
+{
+    
+    var dstc = await AC.ToChuc.Get(nd.DsIdToChuc);
+
+   <section id="congviec" style="padding-top:60px;">
+        <div class="container-fluid">
+            <div class="row justify-content-md-center">
+              
+                <div class="col-md-4">
+                    <div class="card text-center mt-5">
+                        <div class="card-body">
+                            CẬP NHẬT THÔNG TIN TỔ CHỨC
+                        </div>
+                        <div class="card-body text-start">
+
+                            @using (Html.BeginForm("tochuc_update", "nguoidung", FormMethod.Post))
+                            {
+                                <input hidden type="text" class="form-control" id="Id" name="Id" value="@Model.Id">
+                                
+                                <div class="mb-3">
+                                
+                                        <label for="IdToChucMe" class="form-label">Tổ chức mẹ</label>
+                                        <select id="IdToChucMe" name="IdToChucMe" class="form-select">
+                                            <option value=""></option>
+                                            @foreach(var tc in dstc) {
+                                                if (tc.Id != Model.Id && tc.IdHeThong == SystemInfo.HeThong.Id)
+                                                {
+                                                    if (tc.Id == Model.IdToChucMe)
+                                                    {
+                                                        <option selected value="@tc.Id">@tc.Name</option>
+                                                    } else
+                                                    {
+                                                        <option value="@tc.Id">@tc.Name</option>                                                    
+                                                    }
+
+                                                }
+                                                
+                                            }  
+                                                                    
+                                        </select>
+                                                                           
+                                   </div>
+
+                                <div class="mb-3">
+                                    <label for="TenCaThe" class="form-label">Tên hộ kinh doanh</label>
+                                    <input type="text" class="form-control" id="Ten" name="Ten" value="@Model.Ten">
+                                        @if(ViewBag.ErrTenCaThe != null)
+                                        {
+                                            <span class="text-danger" >@ViewBag.ErrTenCaThe</span>
+                                        }
+                                    
+                                  </div>
+
+                                   <div class="mb-3">
+                                
+                                        <label for="TrangThai" class="form-label">Trạng thái</label>
+                                        <select id="TrangThai" name="TrangThai" class="form-select">
+                                            @foreach(TrangThaiToChuc l in Enum.GetValues(typeof(TrangThaiToChuc))) {  
+                                                if (l == Model.TrangThai)
+                                                {
+                                                    <option selected value="@l">@CheckFormat.TenTrangThaiToChuc(l)</option>
+                                                } else
+                                                {                                                
+                                                    <option value="@l">@CheckFormat.TenTrangThaiToChuc(l)</option>
+                                                }
+                                            
+                                            }  
+                                                                    
+                                        </select>
+                                        @if(ViewBag.ErrTrangThai != null)
+                                        {
+                                            <span class="text-danger" >@ViewBag.ErrTrangThai</span>
+                                        }
+                                    
+                                   </div>
+                             
+                                <div class="mb-3 text-start">
+                                <label for="GioiThieu" class="form-label">Giới thiệu</label>
+
+                                <textarea id="GioiThieu" name="GioiThieu" class="form-control">@Model.GioiThieu</textarea>
+                                
+                                
+                                
+                                </div>
+                              
+                             
+                              <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            }
+
+                        
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="row justify-content-md-center">
+              
+        <div class="col-md-6">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    Log của Tổ chức 
+                </div>
+                <div class="card-body text-start">
+                    @Html.Partial("_listLog",new ViewDataDictionary(ViewData)
+                    {
+                            {"qllg", (BaseModel)tct }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </section>
+} 
+

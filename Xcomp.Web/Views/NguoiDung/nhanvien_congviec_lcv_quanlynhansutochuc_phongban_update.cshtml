@@ -1,0 +1,127 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model PhongBanRequest
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Update phòng ban của tổ chức";
+    var tc = await AC.ToChuc.GetById(Model.IdToChuc);
+
+    var pbt = await AC.PhongBan.GetById(Model.Id);   
+
+}
+
+
+
+<section id="congviec" style="padding-top:60px;">
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+              
+        <div class="col-md-4">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    UPDATE PHÒNG BAN  
+                </div>
+                <div class="card-body text-start">
+
+                    @using (Html.BeginForm("nhanvien_congviec_lcv_quanlynhansutochuc_phongban_update", "nguoidung", FormMethod.Post))
+                    {
+                        <input hidden type="text" class="form-control" id="Id" name="Id" value="@Model.Id">
+                        <input hidden type="text" class="form-control" id="IdCongViec" name="IdCongViec" value="@Model.IdCongViec">
+                        <input hidden type="text" class="form-control" id="IdToChuc" name="IdToChuc" value="@Model.IdToChuc">
+                        <div class="mb-3">
+                            <label class="form-label">Tổ chức: @Model.Ten</label> <br/>
+                            <label class="form-label">Loại phòng ban: @pbt.LoaiPhongBan</label> <br/>
+                            <label for="Ten" class="form-label">Tên phòng ban</label>
+                            <input type="text" class="form-control" id="Ten" name="Ten" value="@Model.Ten">
+                                @if(ViewBag.ErrTen != null)
+                                {
+                                    <span class="text-danger" >@ViewBag.ErrTen</span>
+                                }
+                                    
+                        </div>
+                         <div class="mb-3">
+                                
+                                <label for="IdPhongBanMe" class="form-label">Phòng ban mẹ</label>
+                                <select id="IdPhongBanMe" name="IdPhongBanMe" class="form-select">
+                                    <option value=""></option>
+                                    @foreach(var pb in await AC.PhongBan.Get(tc.DsIdPhongBan)) {
+                                        if (pb.Id != Model.Id)
+                                        {
+                                            if (pb.Id == Model.IdPhongBanMe)
+                                            {
+                                                <option selected value="@pb.Id">@pb.Name</option>
+                                            } else
+                                            {
+                                                <option value="@pb.Id">@pb.Name</option>
+                                            }
+                                              
+                                        }
+                                                
+                                    }  
+                                                                    
+                                </select>
+                                                                   
+                            </div>
+                        <div class="mb-3">                                
+                            <label for="TrangThai" class="form-label">Trạng thái</label>
+                            <select id="TrangThai" name="TrangThai" class="form-select">
+                                @foreach(TrangThaiPhongBan l in Enum.GetValues(typeof(TrangThaiPhongBan))) { 
+                                    if (l == Model.TrangThai)
+                                    {
+                                        <option selected value="@l">@CheckFormat.TenTrangThaiPhongBan(l)</option>  
+                                    } else
+                                    {
+                                        <option value="@l">@CheckFormat.TenTrangThaiPhongBan(l)</option>  
+                                    }
+                                    
+                                }  
+                                                                    
+                            </select>
+                            @if(ViewBag.ErrTrangThai != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrTrangThai</span>
+                            }
+                                    
+                        </div>
+                                                
+                        <div class="mb-3 text-start">
+                        <label for="GioiThieu" class="form-label">Giới thiệu</label>
+
+                        <textarea id="GioiThieu" name="GioiThieu" class="form-control">@Model.GioiThieu</textarea>
+                               
+                        </div>
+                              
+                             
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    }
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="row justify-content-md-center">
+              
+        <div class="col-md-6">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    Log của Phòng ban 
+                </div>
+                <div class="card-body text-start">
+                    @Html.Partial("_listLog",new ViewDataDictionary(ViewData)
+                    {
+                            {"qllg", (BaseModel)pbt }
+                    })
+                    
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

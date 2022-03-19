@@ -1,0 +1,146 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model NhanVienRequest
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Cập nhật thông tin nhân viên";
+    var nv = await AC.NhanVien.GetById(Model.Id);
+}
+
+
+
+<section id="congviec" style="padding-top:60px;">
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+              
+        <div class="col-md-4">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    CẬP NHẬT THÔNG TIN NHÂN VIÊN 
+                </div>
+                <div class="card-body text-start">
+
+                    @using (Html.BeginForm("nhanvien_congviec_lcv_quanlynhanvienphongban_update", "nguoidung", FormMethod.Post))
+                    {
+                        <input hidden type="text" class="form-control" id="Id" name="Id" value="@Model.Id">
+                        <input hidden type="text" class="form-control" id="TrangThaiNhanVienLamViec" name="TrangThaiNhanVienLamViec" value="@Model.TrangThaiNhanVienLamViec">
+                        <input hidden type="text" class="form-control" id="TrangThaiNhanVienTraLoi" name="TrangThaiNhanVienTraLoi" value="@Model.TrangThaiNhanVienTraLoi">
+                        <input hidden type="text" class="form-control" id="IdNguoiDung" name="IdNguoiDung" value="@Model.IdNguoiDung">
+                        <input hidden type="text" class="form-control" id="IdToChuc" name="IdToChuc" value="@Model.IdToChuc">
+                        <input hidden type="text" class="form-control" id="IdCongViec" name="IdCongViec" value="@Model.IdCongViec">
+                        <div class="mb-3">
+                        <label for="Ten" class="form-label">Tên nhân viên</label>
+                        <input type="text" class="form-control" id="Ten" name="Ten" value="@Model.Ten">
+                            @if(ViewBag.ErrTen != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrTen</span>
+                            }
+                                    
+                        </div>
+                         <div class="mb-3">
+                        <label for="VaiTro" class="form-label">Chức danh/Vai trò</label>
+                        <input type="text" class="form-control" id="VaiTro" name="VaiTro" value="@Model.VaiTro">
+                            @if(ViewBag.ErrVaiTro != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrVaiTro</span>
+                            }
+                                    
+                        </div>
+                       
+                        
+                            <div class="mb-3">
+                            <label for="SoDienThoai" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" id="SoDienThoai" name="SoDienThoai" value="@Model.SoDienThoai">
+                                @if(ViewBag.ErrSoDienThoai != null)
+                                {
+                                    <span class="text-danger" >@ViewBag.ErrSoDienThoai</span>
+                                }
+                                    
+                            </div>
+                        
+                        @if(Model.IdNguoiDung != null)
+                        {
+                            var nd = await AC.NguoiDung.GetById(Model.IdNguoiDung);
+                            <div class="mb-3">
+                                <label for="SoDienThoai" class="form-label">Người dùng: @nd.Name</label>
+                                @if (Model.TrangThaiNhanVienTraLoi == TrangThaiNhanVien_NhanVienTraLoi.ChapNhan)
+                                    {
+                                        <label for="" class="form-label">Trạng thái làm việc: @CheckFormat.TenTrangThaiNhanVien_LamViec(Model.TrangThaiNhanVienLamViec)</label>
+                                    } else
+                                    {
+                                         <label for="" class="form-label">Trả lời lời mời: @CheckFormat.TenTrangThaiNhanVien_TraLoi(Model.TrangThaiNhanVienTraLoi)</label>
+                                    }
+
+                            </div>
+                        }
+                        
+                        <div class="mb-3">
+                                
+                                <label for="TrangThai" class="form-label">Trạng thái</label>
+                                <select id="TrangThai" name="TrangThai" class="form-select">
+                                    @foreach(TrangThaiNhanVien l in Enum.GetValues(typeof(TrangThaiNhanVien))) {  
+                                        if (l == Model.TrangThai)
+                                        {
+                                            <option selected value="@l">@CheckFormat.TenTrangThaiNhanVien(l)</option>   
+                                        } else
+                                        {
+                                           <option  value="@l">@CheckFormat.TenTrangThaiNhanVien(l)</option>        
+                                        }
+                                        
+                                    }  
+                                                                    
+                                </select>
+                                @if(ViewBag.ErrTrangThai != null)
+                                {
+                                    <span class="text-danger" >@ViewBag.ErrTrangThai</span>
+                                }
+                                    
+                           </div>
+
+                        <div class="mb-3 text-start">
+                        <label for="GioiThieu" class="form-label">Giới thiệu</label>
+
+                        <textarea id="GioiThieu" name="GioiThieu" class="form-control">@Model.GioiThieu</textarea>
+                                
+                                
+                                
+                        </div>
+                              
+                             
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    }
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="row justify-content-md-center">
+              
+        <div class="col-md-6">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    Log của Nhân Viên 
+                </div>
+                <div class="card-body text-start">
+                    @Html.Partial("_listLog",new ViewDataDictionary(ViewData)
+                    {
+                            {"qllg", (QuanLyLog)nv }
+                    })
+                    
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+</div>
+</section>
+
+
+
+

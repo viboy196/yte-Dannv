@@ -1,0 +1,27 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{  
+    var qllg = (BaseModel)ViewBag.qllg;
+}
+
+@if (qllg.DsIdLog != null)
+{
+    
+    <table>
+        @foreach (var lg in await AC.Log.Get(qllg.DsIdLog))
+        {
+            <tr>
+                <td>
+                    @lg.Create.ToLocalTime() 
+                </td>
+                <td>
+                   <strong> @Enum.GetName(typeof(LoaiLog), lg.LoaiLog)</strong> 
+                </td>
+                <td>
+                    @lg.NoiDung
+                </td>
+            </tr>
+        }
+    </table>
+}

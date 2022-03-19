@@ -1,0 +1,104 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model CaRequest
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Update ca cho yếu nhân";
+    var ca = await AC.Ca.GetById((string)ViewBag.idca);   
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);   
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+    var lc = await AC.LoaiCa.GetByCode(ca.CodeLoaiCa);
+}
+
+<section id="congviec" style="padding-top:60px;">
+    <div class="container-fluid">
+       
+
+        <div class="row justify-content-md-center">
+              
+          
+            @foreach (var ps in await AC.PhanSu.Get(lc.DsIdPhanSu) )
+            {
+                var dsca = await AC.NhanVien.Get(ca.DS_DsId("Ca_" + ps.Code));
+                var dsphong = await AC.NhanVien.Get(pb.DS_DsId("PhongBan_" + ps.Code));
+                <div class="col-md-4">
+                    <div class="card text-center mt-5">
+                        <div class="card-body">
+                           @ps.Name
+                        </div>
+                        <ul class="list-group">
+                            @foreach (var nv in dsca )
+                            {
+                                dsphong.RemoveAll(c=> c.Id == nv.Id);
+                                <li class="list-group-item p-0">
+                                    <div class="input-group">
+                                      <input type="text" class="form-control" value="@nv.VaiTro. @nv.Name" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                      <button onclick="Xoa('Ca_@ps.Code','@ViewBag.id', '@ViewBag.idyn', '@ViewBag.idca', '@nv.Id' )" class="btn btn-danger" type="button" style="width:90px;" id="button-addon2">
+                                          Xóa
+                                      </button>
+                                    </div>
+                                
+                                </li>
+                            }
+                      
+                           @if (dsphong.Count > 0)
+                            {
+                                <li class="list-group-item p-0">
+                                    <div class="input-group">
+                                      <select id="Ca_@ps.Code"  class="form-select">
+                                            @foreach(var nv in dsphong)
+                                            {
+                                            
+                                                    <option value="@nv.Id">@nv.VaiTro. @nv.Name</option>
+                                            
+                                              
+                                            }                              
+                                     </select>
+                                      <button onclick="Them('Ca_@ps.Code','@ViewBag.id', '@ViewBag.idyn', '@ViewBag.idca' )"
+                                        class="btn btn-primary" style="width:90px;" type="button">
+                                          Thêm
+                                      </button>
+                                    </div>
+                            
+                                </li>
+                            }
+                            
+                        </ul>
+                    </div>
+                </div>
+            }
+           
+        </div>
+    </div>
+</section>
+
+
+@section scripts {
+
+<script type="text/javascript">
+
+    function Xoa(ds,id, idyn, idca, idxoa)
+    {
+        location = "/nguoidung/nhanvien_congviec_lcv_anninh_baove_lapkehoachbaovevaphanca_ca_nhansu_xoa?id="+id+"&idyn="+idyn+"&idca="+idca+"&ds="+ds+"&idxoa="+idxoa;
+    }
+
+    function Them(ds,id, idyn, idca)
+    {
+        var idthem= $("#"+ds).val();
+        if (idthem != null && idthem != "")
+        {   
+            location = "/nguoidung/nhanvien_congviec_lcv_anninh_baove_lapkehoachbaovevaphanca_ca_nhansu_them?id="+id+"&idyn="+idyn+"&idca="+idca+"&ds="+ds+"&idthem="+idthem;
+        }
+        
+    }
+
+    $(document).ready(function(){
+
+        
+
+    });
+
+</script>
+
+}

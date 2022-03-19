@@ -1,0 +1,98 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Giao phận sự cho Nhân Viên";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var gp = await AC.GiaiPhap.GetById(cv.IdGiaiPhap);
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+    var lgp = await AC.LoaiGiaiPhap.GetByCode(gp.CodeLoaiGiaiPhap);
+}
+
+<section id="congviec" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan=2 class="">
+                         <h5 class="float-start pt-1 mb-0"> Phận sự cá nhân</h5>                   
+                         
+                    </th>
+                </tr>
+                
+            </thead>
+            <tbody>
+                @foreach(var ps in await AC.PhanSu.GetByCodeHeThong(CodeHeThong.AnNinh))
+                {
+
+                    if(ps.PhanSuCaNhan)
+                    {
+                        <tr>
+                            <th colspan=2>
+                                @ps.Name
+                                <a href="/nguoidung/nhanvien_congviec_lcv_anninh_baove_xaydungnhansuphongbaove_phansu_create?id=@ViewBag.id&idps=@ps.Id" class="btn btn-primary btn-sm float-end"> <i class="fa fa-plus"></i>  <i class="fa fa-user"></i></a>
+                            </th>
+                        </tr>
+
+                        foreach(var nv in await AC.NhanVien.Get(pb.DS_DsId("PhongBan_"+ps.Code)))
+                        {
+                            <tr>
+                                <td>@nv.VaiTro. @nv.Name</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-danger" href="/nguoidung/nhanvien_congviec_lcv_anninh_baove_xaydungnhansuphongbaove_phansu_xoa?id=@ViewBag.id&idps=@ps.Id&idnv=@nv.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Cập nhật thông tin bệnh nhân">
+                                        <i class="fas fa-times"></i> 
+                                   </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    
+                }
+                                                            
+            </tbody>
+        </table>
+
+       
+            <table class="table table-hover mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan=2 class="">
+                         <h5 class="float-start pt-1 mb-0"> Phận sự nhóm</h5>                   
+                         
+                    </th>
+                </tr>
+                
+            </thead>
+            <tbody>
+                @foreach(var ps in await AC.PhanSu.GetByCodeHeThong(CodeHeThong.AnNinh))
+                {
+                    if (ps.PhanSuNhom)
+                    {
+                        <tr>
+                            <th colspan=2>
+                                @ps.Name
+                                <a href="/nguoidung/nhanvien_congviec_lcv_anninh_baove_xaydungnhansuphongbaove_phansu_nhom_create?id=@ViewBag.id&idps=@ps.Id" class="btn btn-primary btn-sm float-end"> <i class="fa fa-plus"></i>  <i class="fa fa-user"></i></a>
+                            </th>
+                        </tr>
+
+                        foreach(var nhom in await AC.Nhom.Get(pb.DS_DsId("PhongBan_Nhom_"+ps.Code)))
+                        {
+                            <tr>
+                                <td> @nhom.Name</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-danger" href="/nguoidung/nhanvien_congviec_lcv_anninh_baove_xaydungnhansuphongbaove_phansu_nhom_xoa?id=@ViewBag.id&idps=@ps.Id&idnhom=@nhom.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Cập nhật thông tin nhóm">
+                                        <i class="fas fa-times"></i> 
+                                   </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    
+                }
+                                                            
+            </tbody>
+        </table>
+   </div>
+
+

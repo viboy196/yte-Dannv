@@ -1,0 +1,130 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@model DoiTuongRequest
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Update hồ sơ yếu nhân";
+    var yn = await AC.DoiTuong.GetById(Model.Id);
+}
+
+<section id="congviec" style="padding-top:60px;">
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+              
+        <div class="col-md-4">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    UPDATE HỒ SƠ YẾU NHÂN
+                </div>
+                <div class="card-body text-start">
+
+                    @using (Html.BeginForm("nhanvien_congviec_lcv_anninh_quanlyhosodoituongbaove_update", "nguoidung", FormMethod.Post))
+                    {
+                        <input hidden type="text" class="form-control" id="IdCongViec" name="IdCongViec" value="@Model.IdCongViec">
+                        <input hidden type="text" class="form-control" id="Id" name="Id" value="@Model.Id">
+
+                        <div class="mb-3">
+                                
+                        <label for="CodeLoaiDoiTuong" class="form-label">Loại yếu nhân</label>
+                        <select id="CodeLoaiDoiTuong" name="CodeLoaiDoiTuong" class="form-select">
+                            @foreach(var lyn in await AC.LoaiDoiTuong.GetByCodeHeThong(CodeHeThong.AnNinh)) {  
+                                @if(lyn.Code == Model.CodeLoaiDoiTuong)
+                                {
+                                    <option selected value="@lyn.Code">@lyn.Name </option> 
+                                } else
+                                {
+                                    <option value="@lyn.Code">@lyn.Name </option> 
+                                }
+                                 
+                            }  
+                                                                    
+                        </select>                                
+                                    
+                       </div>
+                        <div class="mb-3">
+                        <label for="Ten" class="form-label">Tên yếu nhân</label>
+                        <input type="text" class="form-control" id="Ten" name="Ten" value="@Model.Ten">
+                            @if(ViewBag.ErrTenBenhNhan != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrTenBenhNhan</span>
+                            }
+                                    
+                        </div>
+                        <div class="mb-3">
+                        <label for="SoDienThoai" class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="SoDienThoai" name="SoDienThoai" value="@Model.SoDienThoai">
+                            @if(ViewBag.ErrSoDienThoai != null)
+                            {
+                                <span class="text-danger" >@ViewBag.ErrTSoDienThoai</span>
+                            }
+                                    
+                        </div>
+                       
+                         <div class="mb-3">
+                                
+                                <label for="TrangThai" class="form-label">Trạng thái</label>
+                                <select id="TrangThai" name="TrangThai" class="form-select">
+                                    @foreach(TrangThaiHoSo l in Enum.GetValues(typeof(TrangThaiHoSo))) {  
+                                        @if(l == Model.TrangThai)
+                                        {
+                                            <option selected value="@l">@CheckFormat.TenTrangThaiHoSo(l)</option> 
+                                        } else
+                                        {
+                                            <option value="@l">@CheckFormat.TenTrangThaiHoSo(l)</option> 
+                                        }
+                                         
+                                    }  
+                                                                    
+                                </select>
+                                @if(ViewBag.ErrTrangThai != null)
+                                {
+                                    <span class="text-danger" >@ViewBag.ErrTrangThai</span>
+                                }
+                                    
+                           </div>
+                       
+                        <div class="mb-3 text-start">
+                        <label for="GioiThieu" class="form-label">Ghi chú</label>
+
+                            <textarea id="GioiThieu" name="GioiThieu" class="form-control">@Model.GioiThieu</textarea>
+                                
+                                
+                        </div>
+                              
+                             
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    }
+
+                        
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center">
+              
+        <div class="col-md-6">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    Log của Bệnh nhân 
+                </div>
+                <div class="card-body text-start">
+                    @Html.Partial("_listLog",new ViewDataDictionary(ViewData)
+                    {
+                            {"qllg", (BaseModel)yn }
+                    })
+                    
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</section>
+
+
+

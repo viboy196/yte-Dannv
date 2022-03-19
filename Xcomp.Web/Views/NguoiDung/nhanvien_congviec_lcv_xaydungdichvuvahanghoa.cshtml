@@ -1,0 +1,90 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Dịch vụ và Hàng hóa";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var tc = await AC.ToChuc.GetById(cv.IdToChuc);
+    var ltc = await AC.LoaiToChuc.GetByCode(tc.CodeLoaiToChuc);
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> DỊCH VỤ & HÀNG HÓA</h5>  
+
+                             <a class="btn btn-primary btn-sm float-end" href="/nguoidung/nhanvien_congviec_lcv_xaydungdichvuvahanghoa_dichvu_create?id=@ViewBag.id">  <i class="fas fa-plus"></i> Dịch vụ</a>
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                    @foreach(var dv in await AC.DichVu.Get(tc.DsIdDichVu))
+                    {
+                        var ldv = await AC.LoaiDichVu.GetByCode(dv.CodeLoaiDichVu);
+                        <tr>
+                            <td>
+                               
+                                <a  href="/nguoidung//nguoidung/nhanvien_congviec_lcv_xaydungdichvuvahanghoa_dichvu_update?id=@ViewBag.id&iddv=@dv.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Cập nhật thông tin nghiệp vụ">
+                                  Dịch vụ: @dv.Name 
+                               </a>  <br />
+                               <span class="text-muted">Loại dịch vụ: @dv.LoaiDichVu</span> <br />
+                               @if (dv.IdSan != null)
+                                {
+                                    var san = await AC.San.GetById(dv.IdSan);
+                                    <span>Sàn: @san.Name</span> <br />
+                                }
+                                @foreach(var lhh in await AC.LoaiHangHoa.Get(ldv.DsIdLoaiHangHoa))
+                                {
+                                    <a  href="/nguoidung/nhanvien_congviec_lcv_xaydungdichvuvahanghoa_hanghoa_create?id=@ViewBag.id&idlhh=@lhh.Id">  <i class="fas fa-plus"></i> Hàng hóa: @lhh.Name</a> <br />
+                                }
+                            
+                            </td>
+                            <td>
+                                <div class="row">
+                                    @foreach(var h in await AC.HangHoa.Get(dv.DsIdHangHoa))
+                                    {
+                                        
+                                        <div class="col-md-4 d-flex">
+                                            <div class="card w-100">
+                                                @if (h.Anh != null)
+                                                {
+                                                    <div class="divanh">
+                                                        <img src="@h.Anh">
+                                                    </div>
+                                                }
+                                              <div class="card-body">
+                                                <h5 class="card-title">@h.Name</h5>
+                                                @Html.Raw(h.TomTat)
+                                                <strong>Giá: </strong> <br>
+                                                @Html.Raw(h.Gia)
+                                                <strong>Liên hệ: </strong> <br>
+                                                @Html.Raw(h.LienHe)
+                           
+                                              </div>
+                                               <div class="card-footer p-3"> 
+                                                  @tc.Name
+
+                                                   <a class="btn btn-primary btn-sm float-end" href="/nguoidung/nhanvien_congviec_lcv_xaydungdichvuvahanghoa_hanghoa_edit?id=@ViewBag.id&idhh=@h.Id">  <i class="fas fa-edit"></i> Update</a>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    }
+                            </div>
+                            </td>
+                        </tr>
+                    }
+                    
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

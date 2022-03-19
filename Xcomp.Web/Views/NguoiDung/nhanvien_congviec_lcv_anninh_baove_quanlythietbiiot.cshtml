@@ -1,0 +1,36 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Quản lý thiêt bị IoT";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var gpp = await AC.GiaiPhap.GetById(cv.IdGiaiPhap);
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+    var lpb = await AC.LoaiPhongBan.GetByCode(pb.CodeLoaiPhongBan);
+     var dsgppb = new List<string>();
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý THIẾT BỊ IoT</h5>  
+
+                            
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

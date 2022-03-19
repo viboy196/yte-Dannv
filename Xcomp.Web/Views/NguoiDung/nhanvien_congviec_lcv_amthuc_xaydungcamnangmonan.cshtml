@@ -1,0 +1,65 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Xây dựng cẩm nang món ăn";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var tc = await AC.ToChuc.GetById(cv.IdToChuc);
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=3 class="">
+                             <h5 class="float-start pt-1 mb-0"> Cẩm nang Món Ăn</h5>  
+
+                            
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>                               
+                            Cẩm nang
+                        </th>
+                        <th>
+                            Công thức    
+                        </th>
+                        
+                    </tr>
+                
+                </thead>
+               <tbody>
+                @foreach(var cn in await AC.CamNang.Get(tc.DS_DsId("DsCamNangToChuc")))
+                {
+                    <tr>
+                        <td>
+                            @cn.Name <br/>
+                            <span class="text-muted">@cn.LoaiCamNang</span>
+
+                        </td>
+                        <td>
+                            @foreach (var c in await AC.ChuongCamNang.Get(cn.DsIdChuongCamNang))
+                            {
+                                <div>@c.Name</div>
+                                <div class="ps-5">
+                                    @foreach (var ct in await AC.CongThuc.Get(c.DsIdCongThuc))
+                                    {
+                                        <div>@ct.Name</div>
+                                    }
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

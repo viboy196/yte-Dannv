@@ -1,0 +1,17 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    var th = (TinHieu)ViewBag.tinhieu;
+    var ti = await AC.TienIch.GetById(th.IdTienIch);
+    var dt = await AC.DoiTuong.GetById(th.IdDoiTuong);    
+}
+
+ <div id="tinhieu-@th.Id" class = "">
+    <div>
+        <h2>@th.LoaiTinHieu</h2> @th.CreatedAt.ToLocalTime().ToString("hh:mm dd/MM")  
+        Tiện ích: @ti.LoaiTienIch  : @ti.Name <br /> 
+        Đối tượng: @dt.LoaiDoiTuong @dt.Name 
+       
+    </div> 
+</div>

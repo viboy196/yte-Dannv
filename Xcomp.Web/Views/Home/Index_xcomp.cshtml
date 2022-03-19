@@ -1,0 +1,156 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Xcomp";
+}
+
+<style>
+    
+
+</style>
+<section id="hearder" style="padding-top:60px;">  
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 d-flex">
+                <div class="w-100 align-items-center row">
+                    <div class="col text-center p-lg-5">
+                     <img style="" class="pb-4" src="@SystemInfo.HeThong.Logo" />
+                      <h5>XCOMP - CÔNG TY SỐ TRIỂN KHAI KINH TẾ CHIA SẺ</h5>
+                      <p class="">    
+                      </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex">
+                <img class="w-100" src="~/Files/xcomp_friend.png" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+  
+    <div class = "row justify-content-md-center mb-4">
+        <div class="col-12 text-center p-5">
+             <h3> LĨNH VỰC  </h3>
+        </div>
+
+        @foreach (var ht in await AC.HeThong.GetAll())
+        {
+            if (ht.Code != "")
+            {
+                <div class="col-md-4 d-flex mb-4 click"  >
+                    <div class="card w-100 bg-light">
+                        <div class="card-header justify-content-between align-items-center">
+                            @ht.ThuongHieu - @ht.LinhVuc
+                        
+                        </div>
+
+                        <ul class="list-group">
+                            
+                            @foreach(var ltc in await AC.LoaiToChuc.Get(ht.DsIdLoaiToChuc))
+                            {
+                                <li class="list-group-item border-0 border-top">
+                                    <a class="" data-bs-toggle="collapse" href="#col-@ltc.Id" role="button" aria-expanded="false" aria-controls="col-@ltc.Id">
+                                        @ltc.Name 
+                                    </a>
+                                    
+
+                                    <div class="collapse mb-2" id="col-@ltc.Id">
+                                        
+                                        @Html.Partial("_loaigiaiphap",new ViewDataDictionary(ViewData)
+                                        {
+                                                {"dsidlgp", ltc.DsIdLoaiGiaiPhap }
+                                        })
+                                       
+
+                                        @foreach (var lpb in await AC.LoaiPhongBan.Get(ltc.DsIdLoaiPhongBan))
+                                        {
+                                            <div>PB: @lpb.Name</div>
+                                            @Html.Partial("_loaigiaiphap",new ViewDataDictionary(ViewData)
+                                            {
+                                                    {"dsidlgp", lpb.DsIdLoaiGiaiPhap }
+                                            })
+                                        }
+
+                                        @foreach (var tc in await AC.ToChuc.GetByCode(ltc.Code))
+                                        {
+                                            <div>TC: @tc.Name</div>
+                                        }
+                                        
+                                    </div>
+                                </li>
+                            
+                            }
+                            @foreach(var ls in await AC.LoaiSan.Get(ht.DS_DsId("Mua")))
+                            {
+                                <li class="list-group-item border-0 border-top bg-light">
+                                    
+                                    
+                                    <a class="" data-bs-toggle="collapse" href="#col-@ls.Id" role="button" aria-expanded="false" aria-controls="col-@ls.Id">
+                                       Sàn mua:  @ls.Name
+                                      </a>
+                                      <div class="collapse mt-2" id="col-@ls.Id">
+                                       @foreach (var ldv in await AC.LoaiDichVu.Get(ls.DsIdLoaiDichVu))
+                                        {
+                                            <div>DV: @ldv.Name</div> 
+                                            <div class="ps-3">
+                                                @foreach (var ldvc in await AC.LoaiDichVu.Get(ldv.DsIdLoaiDichVuCon))
+                                                {
+                                                    <div>DV: @ldvc.Name</div>                                                   
+                                                }
+
+                                            </div>
+
+                                        }
+                                    </div>
+                                    
+                                </li>
+                            
+                            }
+
+                            @foreach(var ls in await AC.LoaiSan.Get(ht.DS_DsId("Ban")))
+                            {
+                                <li class="list-group-item border-0 border-top bg-light">
+                                    
+                                    
+                                    <a class="" data-bs-toggle="collapse" href="#col-@ls.Id" role="button" aria-expanded="false" aria-controls="col-@ls.Id">
+                                        Sàn bán: @ls.Name
+                                      </a>
+                                      <div class="collapse mt-2" id="col-@ls.Id">
+                                       @foreach (var ldv in await AC.LoaiDichVu.Get(ls.DsIdLoaiDichVu))
+                                        {
+                                            <div>DV: @ldv.Name</div> 
+                                            <div class="ps-3">
+                                                @foreach (var ldvc in await AC.LoaiDichVu.Get(ldv.DsIdLoaiDichVuCon))
+                                                {
+                                                    <div>DV: @ldvc.Name</div>                                                   
+                                                }
+
+                                            </div>
+
+                                        }
+                                    </div>
+                                    
+                                </li>
+                            
+                            }
+                        </ul>   
+                       
+
+                    </div>
+                </div>
+            }
+            
+        }
+        
+        
+        
+    </div>
+   
+  
+  
+</div>
+
+

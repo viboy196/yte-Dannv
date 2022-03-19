@@ -1,0 +1,8 @@
+﻿@using Xcomp.Data.TinhNang
+
+@{
+    Layout = null;
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+}
+
+Chi tiết: @cv.LoaiCongViec

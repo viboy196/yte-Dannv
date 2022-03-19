@@ -1,0 +1,51 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Xây dựng nghiệp vụ";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý và cài đặt NGHIỆP VỤ </h5>  
+
+                            
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                    @foreach (var ltn in await AC.LoaiTinhNangMayTuPhucVu.GetAll())
+                    {
+                        <tr>
+                            <td class="w-50">
+                                @ltn.Name
+                             </td>
+                            <td class="w-50">
+                                @foreach (var tn in await AC.TinhNangMayTuPhucVu.GetByCode(ltn.Code))
+                                {
+                                    <div>@tn.Name</div>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                        
+                
+
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

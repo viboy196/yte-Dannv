@@ -1,0 +1,50 @@
+﻿<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+          @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+               
+                <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
+                <input type="number" class="form-control" id="lg_InputNumber" name="Phone">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="lg_InputPassword1" name="Password">
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Ghi nhớ</label>
+              </div>
+              <input type="hidden" name="returnUrl" value="@Context.Request.Path" >
+              <button type="submit" class="btn btn-primary"@* id="btnLogIn"*@>Đăng Nhập</button>
+            }
+         
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="thongbaoModal" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thông báo đến người dùng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="tat_thongbao()"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div id="thongbaoList">
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+      </div>
+      
+      
+    </div>
+  </div>
+</div>

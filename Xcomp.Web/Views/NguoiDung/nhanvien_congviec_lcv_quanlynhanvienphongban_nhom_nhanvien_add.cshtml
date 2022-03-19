@@ -1,0 +1,54 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Update nhóm";
+    var nhom = await AC.Nhom.GetById((string)ViewBag.idnhom); 
+    var pb = await AC.PhongBan.GetById(nhom.IdPhongBan);
+    var dsnv = await AC.NhanVien.Get(pb.DsIdNhanVien);
+}
+
+
+
+<section id="congviec" style="padding-top:60px;">
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+              
+        <div class="col-md-4">
+            <div class="card text-center mt-5">
+                <div class="card-body">
+                    UPDATE NHÓM
+                </div>
+                <div class="card-body text-start">
+
+                    @using (Html.BeginForm("nhanvien_congviec_lcv_quanlynhanvienphongban_nhom_nhanvien_add", "nguoidung", FormMethod.Post))
+                    {
+                        <input hidden type="text" class="form-control" id="id" name="id" value="@ViewBag.id">
+                        <input hidden type="text" class="form-control" id="idnhom" name="idnhom" value="@ViewBag.idnhom">
+                        <div class="mb-3">
+                            
+                            <label  class="form-label">Phòng ban: @pb.Name</label> <br/>
+                            <label class="form-label">Nhóm: @nhom.Name</label>
+                            <select id="idnv" name="idnv" class="form-select">
+                                    @foreach(var l in dsnv)
+                                    {
+                                        <option value="@l.Id">@l.Name</option>  
+                                            
+                                    }                               
+                            </select>
+                                    
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Thêm nhân viên</button>
+                    }
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

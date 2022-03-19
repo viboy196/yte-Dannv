@@ -1,0 +1,119 @@
+﻿@using Xcomp.Share.Common
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Xcomp.Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Xcomp.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@SystemInfo.HeThong.ThuongHieu.ToUpper()</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (SystemInfo.CodeHeThong == CodeHeThong.Xcomp)
+                        {
+                            @Html.Partial("_loaisan")
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="nguoidungDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Người dùng
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                                
+                                    <li><a class="dropdown-item" href="/nguoidung/nhanvien_home">Nhân viên</a></li>
+                                    <li><a class="dropdown-item" href="/nguoidung/tochuc_home">Tổ chức</a></li>
+                                </ul>
+                            </li>
+
+                        } else 
+                        if (SystemInfo.CodeHeThong == CodeHeThong.YTeMoi)
+                        {
+                            
+                             <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="nguoidungDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Y học
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item disabled" href="/yte/benhvatrieuchung">Bệnh và triệu chứng</a></li>
+                                    <li><a class="dropdown-item disabled" href="/yte/phacdo">Phác đồ điều trị</a></li>
+                                    <li><a class="dropdown-item disabled" href="/yte/thuoc">Thuốc</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item disabled" href="/yte/tochucyte">Cơ sở y tế</a></li>
+                                    <li><a class="dropdown-item disabled" href="/yte/bacsi">Bác sĩ</a></li>
+                           
+                                </ul>
+                            </li>
+
+                              @Html.Partial("_loaisan")
+
+                              <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="nguoidungDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Người dùng
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/nguoidung/nguoidung_home">Bệnh nhân & Người nhà</a></li>
+                                    <li><a class="dropdown-item" href="/nguoidung/nhanvien_home">Nhân viên</a></li>
+                                    <li><a class="dropdown-item" href="/nguoidung/tochuc_home">Tổ chức</a></li>
+                                    </ul>
+                            </li>
+
+                        } else
+                        {
+                            @Html.Partial("_loaisan")
+                            <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="nguoidungDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Người dùng
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/nguoidung/nguoidung_home">Người dùng</a></li>
+                                    <li><a class="dropdown-item" href="/nguoidung/nhanvien_home">Nhân viên</a></li>
+                                    <li><a class="dropdown-item" href="/nguoidung/tochuc_home">Tổ chức</a></li>
+                                    </ul>
+                            </li>
+                        }
+
+                    </ul>
+                    <div class="d-flex" id="AccountStatus">
+                         @Html.Partial("_AccountStatusPartial")
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+     @Html.Partial("_ModalPartial")
+     @if (SystemInfo.CodeHeThong == CodeHeThong.YTeMoi)
+     {
+         <footer class="border-top mt-5 pt-4 pb-4 bg-light">
+            <div class="container">            
+                <div class="text-center"> @SystemInfo.HeThong.ThuongHieu.ToUpper() &copy; 2015 All Rights Reserved  </div>            
+            </div>
+        </footer>
+                            
+     } else 
+     {
+        <footer class="border-top mt-5 pt-4 pb-4 bg-light">
+            <div class="container">            
+                <div class="text-center"> Xcomp &copy; 2015 All Rights Reserved  </div>            
+            </div>
+        </footer>
+     }
+    
+    @Html.Partial("_js")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

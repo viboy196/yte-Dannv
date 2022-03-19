@@ -1,0 +1,92 @@
+﻿@using Xcomp.Share.Common
+@{
+    var code = (string)TempData["codelcv"];
+    var name = (string)TempData["namelcv"];
+    var id = (string)TempData["idcv"];
+    TempData.Keep("codelcv");
+    TempData.Keep("namelcv");
+    TempData.Keep("idcv");
+} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="~/Files/ytemoiicon.png" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ytemoi.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+</head>
+<body>
+    <header>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow fixed-top ">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="/"> @SystemInfo.HeThong.ThuongHieu.ToUpper()  </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  
+            
+                      <li class="nav-item">
+                            <a class="nav-link active" href="/nguoidung/nhanvien_coquan">Cơ quan </a>
+                        </li>
+                            <li class="nav-item">
+                            <a class="nav-link active" href="/nguoidung/nhanvien_home">Bàn làm việc</a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/nguoidung/nhanvien_congviec_@code?id=@id">@name</a>
+                        </li>
+
+                        @if (code == "lcv_iot_miraway_xaydungnghiepvu")
+                        {
+                                <li class="nav-item">
+                                <a class="nav-link active" href="/nguoidung/nhanvien_congviec_@(code)_quanlycaidat?id=@id">Quản lý & Cài đặt nghiệp vụ</a>
+                            </li>
+                        }
+                        
+                        
+                       
+
+                        
+
+                 
+                 
+               </ul>
+               <div class="d-flex" id="AccountStatus">
+                   @Html.Partial("_AccountStatusPartial",new ViewDataDictionary(ViewData)
+                    {
+                            {"url", "/nguoidung/nhanvien_home" }
+                    })
+              </div>
+             
+            </div>
+          </div>
+        </nav>
+
+      
+    </header>
+    <div style="min-height:calc(100vh - 130px);">
+        <main role="main">
+            @RenderBody()
+        </main>
+        <div class="clearfix"></div>
+    </div>
+      @Html.Partial("_ModalPartial")
+    <footer class="border-top mt-5 pt-4 pb-4 bg-light">
+        <div class="container">
+            <div class="text-center">  @SystemInfo.HeThong.ThuongHieu.ToUpper() &copy; 2016 All Rights Reserved  </div>
+        </div>
+    </footer>
+
+    @Html.Partial("_js")
+   
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,83 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@{
+    var idsan = (string)TempData["idsan"];
+    TempData.Keep("idsan");
+    var san = await AC.San.GetById(idsan);
+    var ls = await AC.LoaiSan.GetByCode(san.CodeLoaiSan);
+    var dss = await AC.San.GetByCode(ls.Code);
+} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="~/Files/ytemoiicon.png" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ytemoi.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+</head>
+<body>
+    <header>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow fixed-top ">
+          <div class="container-fluid">
+             <a class="navbar-brand"  href="/">@SystemInfo.HeThong.ThuongHieu.ToUpper()  </a>
+            @* <i class="fas fa-caret-right"></i> <a class="navbar-brand ms-2"  href="/san/index?idls=@ls.Id"> CHĂM BỆNH  </a>
+            *@ 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">                 
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="nguoidungDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @ls.Name
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            @foreach(var s in dss)
+                            {
+                                <li><a class="dropdown-item" href="/san/index?id=@s.Id">@s.Name</a></li>
+                            }                           
+                        </ul>
+                    </li>
+
+                   
+                    
+                </ul>
+             <div class="d-flex" id="AccountStatus">
+                   @Html.Partial("_AccountStatusPartial")
+              </div>
+             
+            </div>
+          </div>
+        </nav>
+
+      
+    </header>
+    <div style="min-height:calc(100vh - 121px);">
+        <main role="main" style="padding-top:60px;">
+             @RenderBody()
+        </main>
+        <div class="clearfix"></div>
+    </div>
+
+     @Html.Partial("_ModalPartial")
+   
+    <footer class="border-top mt-5 pt-4 pb-4 bg-light">
+        <div class="container">
+            
+            <div class="text-center"> <a href="/">@SystemInfo.HeThong.ThuongHieu</a>  &copy; 2022 All Rights Reserved  </div>
+            
+        </div>
+    </footer>
+
+     @Html.Partial("_js")
+   
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

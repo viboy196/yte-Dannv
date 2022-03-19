@@ -1,0 +1,172 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@{
+    Layout = "~/Views/Shared/_Layout_ToChuc.cshtml";
+    ViewData["Title"] = "Quản lý tổ chức";
+        
+    var nd = User.Identity.IsAuthenticated?await AC.NguoiDung.GetById(User.Identity.Name):null;
+}
+
+@if (nd != null)
+{
+    
+   var dstc = await AC.ToChuc.Get(nd.DsIdToChuc);
+
+   <section id="congviec" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan=3 class="">
+                         <h5 class="float-start pt-1 mb-0">Quản lý TỔ CHỨC</h5> 
+
+                   
+                        <a href="/nguoidung/tochuc_create" class="btn btn-primary btn-sm float-end"> <i class="fa fa-plus"></i> Tạo tổ chức</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                       <i class="fa fa-home"></i>  Tổ chức
+                    
+                    </th>
+                    <th>
+                       <i class="fa fa-users"></i>  Quản lý 
+                     
+                    </th>
+                                        
+                    <td>
+
+                    </td>
+                   
+
+                
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var tc in dstc)
+                {
+                    var ltc = await AC.LoaiToChuc.GetByCode(tc.CodeLoaiToChuc);
+                    var dslgp = new List<string>();
+                        if (ltc.IdHeThong == SystemInfo.HeThong.Id)
+                        {
+                            
+                             <tr>
+                                <td>
+                                    <a class="" href="/nguoidung/tochuc_update/@tc.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Update thông tin tổ chức">@tc.Name</a>
+                                    <br/>
+                                    <span class="text-muted"> 
+                                    <a  data-bs-toggle="tooltip" title="Thông tin về @ltc.Name" href="/nguoidung/tochuc_huongdan#ltc-@ltc.Id" class="text-reset">@ltc.Name</a>
+                                    </span> <br/>
+                                   
+                                  @* [@CheckFormat.TenTrangThaiToChuc(@tc.TrangThai)]<br/>*@
+                                   @if (tc.IdToChucMe != null)
+                                   {
+                                       <span class="text-muted"> Tổ chức me: @((await AC.ToChuc.GetById(tc.IdToChucMe)).Name)</span> <br />
+                                   }
+                                    @if (tc.GioiThieu != null)
+                                    {
+                                        @tc.GioiThieu <br />
+                                    }
+                                  
+                                    @foreach (var gp in await AC.GiaiPhap.Get(tc.DsIdGiaiPhap))
+                                        {
+                                            var lgp = await AC.LoaiGiaiPhap.GetByCode(gp.CodeLoaiGiaiPhap);
+                                            dslgp.Add(gp.CodeLoaiGiaiPhap);
+                                            <div> Giải pháp: @gp.LoaiGiaiPhap</div>
+                                            <div class="ps-5">
+                                                @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                                {                                                    
+                                                    <a href="/nguoidung/tochuc_congviec_create?idtc=@tc.Id&idlcv=@lcv.Id&idgp=@gp.Id"> <i class="fas fa-plus"></i> Giao việc: @lcv.Name</a> <br /> 
+                                                }
+                                            </div>
+                                        }
+                                     @foreach (var lgp in await AC.LoaiGiaiPhap.Get(ltc.DsIdLoaiGiaiPhap))
+                                        {
+                                            if (dslgp.IndexOf(lgp.Code) <0)
+                                            {
+                                                <a  href="/nguoidung/tochuc_giaiphap_create?idtc=@tc.Id&idlgp=@lgp.Id">  <i class="fas fa-plus"></i> Dùng giải pháp: @lgp.Name</a>
+
+                                                <div class="ps-5">
+                                                    @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                                    {
+                                                        <div>Công việc: @lcv.Name</div>
+                                                        
+                                                    }
+                                                </div>
+                                            }
+                                            
+                                        }
+                                  
+                                </td>
+                                <td>
+                                    @foreach (var nv in  await AC.NhanVien.Get(tc.DsIdNhanVienToChuc))
+                                    {
+                                        <a data-bs-toggle="tooltip" title="Update thông tin nhân viên @nv.Name" href="/nguoidung/tochuc_nhanvien_update/@nv.Id">@nv.VaiTro. @nv.Name</a> <br />
+                                        <div class="ps-4">
+                                            @foreach (var cv in await AC.CongViec.Get(nv.DsIdCongViec))
+                                            {
+                                                
+                                                <a data-bs-toggle="tooltip" title="Update thông tin công việc @cv.LoaiCongViec" href="/nguoidung/tochuc_congviec_update/@cv.Id"> Làm việc: @cv.LoaiCongViec</a> 
+                                                @*<span>  [@CheckFormat.TenTrangThaiCongViec(cv.TrangThai)]</span>*@    <br />
+                                            }
+                                        </div>
+                            
+                                    }
+                           
+                                </td>
+                               
+                                
+                                <td class="text-end">
+                                     
+                                      <a class="btn btn-sm btn-primary mb-2" href="/nguoidung/tochuc_nhanvien_create/@tc.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Tạo mới nhân viên quản lý tổ chức">
+                                        <i class="fa fa-plus"></i>  <i class="fa fa-users"></i>
+                                    </a>
+                                   
+                                </td>
+                               
+                            </tr>
+                                
+                         }
+                   
+                }
+            </tbody>
+        </table>
+   </div>
+   
+   
+</section>
+} else
+{
+     <section id="congviec" style="padding-top:60px;">
+        <div class="container-fluid">
+            <div class="row justify-content-md-center">
+              
+                <div class="col-md-4">
+                    <div class="card text-center mt-5">
+                        <div class="card-body">
+                            HÃY ĐĂNG NHẬP ĐỂ BẮT ĐẦU QUẢN LÝ TỔ CHỨC
+                        </div>
+                        <div class="card-body">
+                            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                            {
+               
+                              <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
+                                <input type="number" class="form-control text-center" id="lg_InputNumber" name="Phone">
+                              </div>
+                              <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Password</label>
+                                <input type="password" class="form-control text-center" id="lg_InputPassword1" name="Password">
+                              </div>
+                              
+                              <input type="hidden" name="returnUrl" value="@Context.Request.Path" >
+                              <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+

@@ -1,0 +1,57 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Món ăn";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=3 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý MÓN ĂN</h5>  
+
+                            
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>                               
+                            Món ăn
+                        </th>
+                        
+                        <th>
+                               
+                        </th>
+                    </tr>
+                
+                </thead>
+               <tbody>
+                    @foreach(var mon in await AC.MonAn.GetAll())
+                    {
+                        
+                        <tr>
+                            <td>                               
+                               @mon.Name <br/>
+                                                       
+                            </td>
+                             <td>
+                             
+                            </td>
+                            
+                        </tr>
+                    }
+                    
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </div>
+
+

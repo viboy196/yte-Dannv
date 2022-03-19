@@ -1,0 +1,60 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    var tb = (ThongBao)ViewBag.tb;
+}
+
+@if (tb.Loai == LoaiThongBao.Tao_NhanVien)
+{
+    var tc = await AC.ToChuc.GetById(tb.IdDoiTuongGui);
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <span>
+            <strong>@tc.Name</strong> <br/>
+            @tb.NoiDung           
+        </span>  
+        <span> @CheckFormat.KhoangThoiGian(tb.Create)</span>
+    </div>
+    if (!tb.DaXuLy)
+    {
+        <div class="mt-2">
+            <button class="btn btn-sm btn-outline-primary" onclick="xuly_thongbao('@tb.Id','Chấp nhận')"> Chấp nhận</button> 
+            <button class="btn btn-sm btn-outline-danger" onclick="xuly_thongbao('@tb.Id','Từ chối')"> Từ chối</button>
+        </div>
+    } else
+    {
+        <div class="mt-2">
+           @tb.KetQua
+        </div>
+    }
+
+} else
+if (tb.Loai == LoaiThongBao.Tao_CongViec)
+{
+    var tc = await AC.ToChuc.GetById(tb.IdDoiTuongGui);
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <span>
+            <strong>@tc.Name</strong> <br/>
+            @tb.NoiDung           
+        </span>  
+        <span> @CheckFormat.KhoangThoiGian(tb.Create)</span>
+    </div>
+    if (!tb.DaXuLy)
+    {
+        <div class="mt-2">
+            <button class="btn btn-sm btn-outline-primary" onclick="xuly_thongbao('@tb.Id','Chấp nhận')"> Chấp nhận</button> 
+            <button class="btn btn-sm btn-outline-danger" onclick="xuly_thongbao('@tb.Id','Từ chối')"> Từ chối</button>
+        </div>
+    } else
+    {
+        <div class="mt-2">
+           @tb.KetQua
+        </div>
+    }
+
+} else
+{
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <span>@tb.NoiDung</span><span> @CheckFormat.KhoangThoiGian(tb.Create)</span>
+    </div>
+} 

@@ -1,0 +1,109 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Chăm sóc người bệnh";
+     var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var gp = await AC.GiaiPhap.GetById(cv.IdGiaiPhap);
+    var nvtd = await AC.NhanVien.GetById(cv.IdNhanVien);
+}
+
+<section id="congviec" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan=2 class="">
+                         <h5 class="float-start pt-1 mb-0"> Chăm sóc NGƯỜI BỆNH</h5>                   
+                         
+                    </th>
+                </tr>
+                
+            </thead>
+            <tbody>
+               @foreach (var ca in await AC.Ca.Get(nvtd.DS_DsId("Ca_ps_yte_chamsocnguoibenh")))
+                {
+                    var bn = await AC.DoiTuong.GetById(ca.IdDoiTuong);
+                     var lc = await AC.LoaiCa.GetByCode(ca.CodeLoaiCa);
+                    <tr>
+                        <td>
+                            @bn.Name
+                            @foreach(var ti in await AC.TienIch.Get(bn.DsIdTienIch))
+                            {
+                                var nd = await AC.NguoiDung.GetById(ti.IdNguoidung);
+                                <div>
+                                    <strong>@ti.LoaiTienIch :</strong>
+                                     @ti.VaiTroNguoiDung - @ti.Name
+                                    @if (nd != null)
+                                    {
+                                        <span>(@nd.Name)</span>
+                                    } 
+                                </div>
+                                
+                            }
+                        </td>
+                        <td>
+                           
+                                <table>
+                                    <tr>
+                                        <th style ="width:150px;">
+                                            Thông tin ca:
+                                        </th>
+                                        <td>
+                                            @ca.LoaiCa 
+                                            
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <th>
+                                            Nhân sự:
+                                                
+                                        </th>
+                                        <td>
+                                            @foreach (var ps in await AC.PhanSu.Get(lc.DsIdPhanSu) )
+                                            {
+                                                    <strong> @ps.Name:</strong> 
+                                                    foreach (var nv in await AC.NhanVien.Get(ca.DS_DsId("Ca_"+ps.Code)))
+                                                    {
+                                                    <span>
+                                                        @nv.VaiTro. @nv.Name
+                                                    </span>
+                                                    }
+                                        
+                                            }
+
+                                            
+                                               
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Kế hoạch:
+                                                
+                                        </th>
+                                        <td>
+                                            @foreach (var kh in await AC.KeHoach.Get(ca.DsIdKeHoach) )
+                                            {
+                                                <span>
+                                                     @kh.LoaiKeHoach
+                                                </span>
+                                            }
+                                               
+                                           
+                                        </td>
+                                    </tr>
+                                    
+                                   
+                                </table> 
+
+                        </td>
+                    </tr>
+
+                }
+
+                            
+            </tbody>
+        </table>
+   </div>
+

@@ -1,0 +1,165 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Quản lý nhân viên";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var gpp = await AC.GiaiPhap.GetById(cv.IdGiaiPhap);
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+    var lpb = await AC.LoaiPhongBan.GetByCode(pb.CodeLoaiPhongBan);
+     var dsgppb = new List<string>();
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> PHÒNG BAN : @pb.Name</h5>  
+
+                            
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+             
+
+                        <tr>
+                            <td>
+                                <div class="text-muted"> @lpb.Name </div> 
+                                @if (pb.IdPhongBanMe != null)
+                                    {
+                                        <span class="text-muted"> Phòng ban mẹ: @((await AC.PhongBan.GetById(pb.IdPhongBanMe)).Name)</span> <br />
+                                    }
+                                
+                                <div class="mb-3"> 
+                                    @foreach (var gp in await AC.GiaiPhap.Get(pb.DsIdGiaiPhap))
+                                    {
+                                        var lgp = await AC.LoaiGiaiPhap.GetByCode(gp.CodeLoaiGiaiPhap);
+                                        dsgppb.Add(lgp.Code);
+                                        <div>Giải pháp: @gp.LoaiGiaiPhap</div>
+                                        <div class="ps-5">
+                                            @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                            {
+
+                                                <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_congviec_create?id=@ViewBag.id&idlv=@lcv.Id&idgp=@gp.Id"> <i class="fas fa-plus"></i> Giao việc: @lcv.Name</a> <br />                                                    
+
+                                            
+                                            }
+                                        </div>
+                                    }
+
+                                    @foreach (var lgp in await AC.LoaiGiaiPhap.Get(lpb.DsIdLoaiGiaiPhap))
+                                    {
+                                        if (dsgppb.IndexOf(lgp.Code) <0)
+                                        {
+
+                                            <a  href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_giaiphap_create?id=@ViewBag.id&idlgp=@lgp.Id">  <i class="fas fa-plus"></i> Dùng giải pháp: @lgp.Name</a>
+
+
+                                            <div class="ps-5">
+                                                @foreach (var lcv in await AC.LoaiCongViec.Get(lgp.DsIdLoaiCongViec))
+                                                {
+                                                    <div>Công việc: @lcv.Name</div>
+                                                    <div class="ps-5">
+
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                            
+                                    }
+                                </div>
+
+                             </td>
+                            <td class="text-end">
+                           
+                            </td>
+                        </tr>
+                
+
+                            
+                </tbody>
+            </table>
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý NHÂN VIÊN</h5>                   
+                             <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_create/@ViewBag.id" class="btn btn-primary btn-sm float-end"> <i class="fa fa-plus"></i>  <i class="fa fa-user"></i></a>
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                  @foreach(var nv in await AC.NhanVien.Get(pb.DsIdNhanVien))
+                    {
+
+                        <tr>
+                            <td class="w-50">
+                                 <a  href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_update?id=@ViewBag.id&idnv=@nv.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Cập nhật thông tin nhân viên">
+                                    @nv.VaiTro. @nv.Name
+                               </a>
+                                
+                                @if (nv.IdNguoiDung != null)
+                                {
+                                    var nd = await AC.NguoiDung.GetById(nv.IdNguoiDung);
+                                    <span>(@nd.Name)</span> 
+                                }
+                             </td>
+                             <td class="w-50">
+                                 @foreach(var cvnv in await AC.CongViec.Get(nv.DsIdCongViec))
+                                 {
+                                      <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_congviec_update?id=@ViewBag.id&idcv=@cvnv.Id"> @cvnv.LoaiCongViec</a> <br />
+                                 }
+
+                             </td>
+                          
+                        </tr>
+                    }
+
+                            
+                </tbody>
+            </table>
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> Quản lý NHÓM</h5>                   
+                             <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_nhom_create/@ViewBag.id" class="btn btn-primary btn-sm float-end"> <i class="fa fa-plus"></i>  <i class="fa fa-users"></i></a>
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                  @foreach(var nhom in await AC.Nhom.Get(pb.DsIdNhom))
+                   {
+
+                        <tr>
+                            <td class="w-50"> 
+                                 <a  href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_nhom_update?id=@ViewBag.id&idnhom=@nhom.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Cập nhật thông tin nhóm">
+                                   @nhom.Name
+                               </a>
+                                 <br/>
+                                <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_nhom_nhanvien_add?id=@ViewBag.id&idnhom=@nhom.Id"><i class="fas fa-plus"></i> Thêm nhân viên</a> 
+                             </td>
+                             <td class="w-50">
+                                 @foreach(var nv in await AC.NhanVien.Get(nhom.DsIdNhanVien))
+                                 {
+                                     <span>@nv.VaiTro. @nv.Name</span>   <a href="/nguoidung/nhanvien_congviec_lcv_quanlynhanvienphongban_nhom_nhanvien_xoa?id=@ViewBag.id&idnhom=@nhom.Id&idnv=@nv.Id"class="text-danger"> <i class="fas fa-times"></i></a> <br />
+                                 }
+
+                             </td>
+                            
+                        </tr>
+                   }      
+                </tbody>
+            </table>
+
+       </div>
+  </div>
+
+

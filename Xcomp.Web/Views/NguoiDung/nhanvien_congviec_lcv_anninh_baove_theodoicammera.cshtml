@@ -1,0 +1,125 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Theo dõi camera";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+    var nd = await AC.NguoiDung.GetById(User.Identity.Name);
+    var dsnvtd = await AC.NhanVien.Get(pb.DS_DsId("PhongBan_ps_anninh_theodoi"));
+    var nv = dsnvtd.FirstOrDefault(c => c.IdNguoiDung == nd.Id);
+    List<TinHieu> DsIdTinHieu = new List<TinHieu>();
+}
+
+@if (nv != null)
+{
+    <input hidden id="nvid" value="@nv.Id"/>
+    <input hidden id="phansu" value="Ca_ps_anninh_theodoi"/>
+} else
+{
+    <input hidden id="nvid" value=""/>
+    <input hidden id="phansu" value=""/>
+}
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan=2 class="">
+                             <h5 class="float-start pt-1 mb-0"> Theo dõi CAMERA: @nd.Name</h5>
+                        </th>
+                    </tr>
+                
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @if (nv != null)
+                            {
+                                @foreach(var ca in await AC.Ca.Get(nv.DS_DsId("Ca_ps_anninh_theodoi")))
+                                {
+                                    var dt = await AC.DoiTuong.GetById(ca.IdDoiTuong);
+                                    DsIdTinHieu.AddRange(await AC.TinHieu.Get(dt.DsIdTinHieu));
+
+                                    <div>
+                                        @ca.LoaiCa: @dt.LoaiDoiTuong. @dt.Name
+                                    </div>
+                                     foreach(var ti in await AC.TienIch.Get(dt.DsIdTienIch))
+                                     {
+                                        var ndti = await AC.NguoiDung.GetById(ti.IdNguoidung);
+                                        <table>
+                                            <tr>
+                                                <th>
+                                                    @ti.LoaiTienIch :
+                                                </th>
+                                                <td>
+                                                    @ti.VaiTroNguoiDung - @ti.Name
+                                                    @if (ndti != null)
+                                                    {
+                                                        <span>(@ndti.Name)</span>
+                                                    } 
+                                                    
+                                                </td>
+                                       
+                                            </tr>
+                                        </table>
+                                     }
+                                }
+
+                            DsIdTinHieu.OrderByDescending(c => c.CreatedAt);
+
+                   
+                        
+                            }
+                            
+                        </td>
+                        <td>
+                            <div id="tinhieu">
+                            @for ( int i = DsIdTinHieu.Count -1;  i >= 0; i--)
+                            {
+                                       @Html.Partial("_tinhieu",new ViewDataDictionary(ViewData)
+                                        {
+                                                {"tinhieu", DsIdTinHieu[i] }
+                                        })
+                                      
+                                   }
+                            </div>
+                           
+                        </td>
+                    </tr>
+                    
+                            
+                </tbody>
+            </table>
+          
+
+       </div>
+  </section>
+
+
+  @section Scripts{
+    
+    <script>
+       
+        function Connected() {
+            
+            var nvid = $("#nvid").val();
+            var phansu = $("#phansu").val();
+            if (nvid != "")
+            {
+                dangky_roomtructinhieu(nvid,phansu);
+            }
+        }
+
+        
+        $(document).ready(function () {
+           
+        });
+
+
+    </script>
+
+}

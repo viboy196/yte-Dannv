@@ -1,0 +1,121 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Xây dựng nghiệp vụ";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    
+}
+<style>
+    .KonvaCanvas{
+        position:absolute;
+        top:0px;
+        left:0px;
+        bottom:0px;
+        right:0px;
+    }
+</style>
+
+<section id="GiaiPhap" style="padding-top:60px;" >
+       <div class="container-fluid  pt-3">
+           <div class="text-center">
+               <button class="btn btn-primary">
+                   <i class="fas fa-plus" ></i>
+               </button>
+               <button class="btn btn-primary">
+                   <i class="fas fa-folder" ></i>
+               </button>
+               <button class="btn btn-primary">
+                   <i class="fas fa-save"></i>
+               </button>
+               <button class="btn btn-primary ps-3 pe-3">
+                   <i class="fas fa-caret-right" ></i>
+               </button>
+           </div>
+           <div class="row">
+               <div class="col-3">
+                   @foreach(var nmq in await AC.NhomModuleQuyTrinh.GetAll())
+                    {
+                        <div class="card text-dark bg-light mb-3 " >
+                            <div class="card-header "><strong>@nmq.Name</strong> </div>
+                            <ul class="list-group">
+                                @foreach(var m in await AC.ModuleQuyTrinh.Get(nmq.DsIdModuleQuyTrinh))
+                                {
+                                    <li class="list-group-item">
+                                        <a href="#">@m.Name</a>    
+                                    </li>
+                                }
+          
+                            </ul>
+                        </div>    
+                    
+                    }
+              </div>
+               <div class="col-6" >
+                   <div>Nghiệp vụ mua sim > Mua sim Viettel</div>
+                   <div style="position:relative; width:100%; height:calc(100vh - 180px)">
+                       <div class="KonvaCanvas" id="konvaView"></div>
+                   </div>
+                   
+               </div>
+               <div class="col-3 ">
+                   <div class="card  text-dark bg-light mb-3 " >
+                        <div class="card-header "><strong>Thông số đối tượng: Ngôi sao</strong> </div>
+                        <table class="table mb-0 bg-white">
+                            <tr>
+                                <th class="w-50">
+                                    Độ dài cánh
+                                </th>
+                                <td class="w-50">
+                                    <input class="w-100" value="200" />
+                                </td>
+                            </tr>
+                             <tr>
+                                <th class="w-50">
+                                    Màu viền
+                                </th>
+                                <td class="w-50">
+                                    <input class="w-100" value="Xanh lá cây đậm" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="w-50">
+                                    Màu phủ
+                                </th>
+                                <td class="w-50">
+                                    <input class="w-100" value="Xanh lá cây nhạt" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+               </div>
+
+           </div>
+         
+       </div>
+  </div>
+
+  @section Scripts{
+    <script src="/lib/konva/konva.min.js"></script>
+    <script src="/lib/konva/konvalib.js"></script>
+    <script>
+       
+        function Connected() {
+           
+            if ($("#auth_nguoidungid").html() != "") {               
+                
+            }
+        }
+
+        $(document).ready(function () {
+            
+
+           
+
+        });
+
+
+    </script>
+
+}

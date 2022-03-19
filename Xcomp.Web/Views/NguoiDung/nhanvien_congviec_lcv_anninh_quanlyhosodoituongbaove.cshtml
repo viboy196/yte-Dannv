@@ -1,0 +1,74 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Quản lý hồ sơ yếu nhân";
+    var cv = await AC.CongViec.GetById((string)ViewBag.id);
+    var gp = await AC.GiaiPhap.GetById(cv.IdGiaiPhap);
+    var pb = await AC.PhongBan.GetById(cv.IdPhongBan);
+}
+
+<section id="congviec" style="padding-top:60px;" >
+       <div class="container-fluid">
+            <table class="table table-hover mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan=3 class="">
+                         <h5 class="float-start pt-1 mb-0"> Hồ sơ YẾU NHÂN</h5>    
+                         
+                         <a href="/nguoidung/nhanvien_congviec_@(cv.CodeLoaiCongViec)_create/@ViewBag.id" 
+                         class="btn btn-primary btn-sm float-end"> 
+                            <i class="fa fa-plus"></i>  <i class="fa fa-user"></i>
+                        </a>
+                    </th>
+                </tr>
+                
+            </thead>
+            <tbody>
+              @foreach(var yn in await AC.DoiTuong.Get(pb.DS_DsId("DsPhongBanDoiTuong")))
+                {
+                    <tr>
+                        <td>
+                            
+                            <div>@yn.Name</div>
+                            <div class="text-muted">@yn.LoaiDoiTuong</div>
+                        </td>
+                        <td>
+                            @foreach(var ti in await AC.TienIch.Get(yn.DsIdTienIch))
+                            {
+                                var nd = await AC.NguoiDung.GetById(ti.IdNguoidung);
+                                <table>
+                                    <tr>
+                                        <th>
+                                            @ti.LoaiTienIch :
+                                        </th>
+                                        <td>
+                                            @ti.VaiTroNguoiDung - @ti.Name
+                                            @if (nd != null)
+                                            {
+                                                <span>(@nd.Name)</span>
+                                            } 
+                                            <a href="/nguoidung/nhanvien_congviec_@(cv.CodeLoaiCongViec)_tienich_update?id=@ViewBag.id&idyn=@yn.Id&idti=@ti.Id"><i class="fa fa-edit ms-2"></i></a>
+                                        </td>
+                                       
+                                    </tr>
+                                </table>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-primary" href="/nguoidung/nhanvien_congviec_@(cv.CodeLoaiCongViec)_tienich_create?id=@ViewBag.id&idyn=@yn.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm mới liên hệ">
+                                <i class="fa fa-link"></i> 
+                            </a>
+                            <a class="btn btn-sm btn-primary" href="/nguoidung/nhanvien_congviec_@(cv.CodeLoaiCongViec)_update?id=@ViewBag.id&idyn=@yn.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Update thông tin bệnh nhân">
+                                <i class="fa fa-edit"></i> 
+                           </a>
+                        </td>
+                    </tr>
+                }
+
+                            
+            </tbody>
+        </table>
+   </div>
+

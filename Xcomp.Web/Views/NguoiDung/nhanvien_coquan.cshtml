@@ -1,0 +1,122 @@
+﻿@using Xcomp.Data.TinhNang
+@using Xcomp.Share.Common
+@using Xcomp.Share.Domain
+@{
+    Layout = "~/Views/Shared/_Layout_NhanVien.cshtml";
+    ViewData["Title"] = "Cơ quan";
+    var nd = User.Identity.IsAuthenticated?await AC.NguoiDung.GetById(User.Identity.Name):null;
+}
+
+@if (nd!= null)
+{
+    //Lấy danh sách nhân viên của người dùng
+    var dsnv = await AC.NhanVien.Get(nd.DsIdNhanVien);
+
+    var dstbcv = new List<CongViec>();
+
+    <section id="congviec" style="padding-top:60px;">
+  
+        <div class="container-fluid mt-3">
+            <div class="row">
+                @foreach(var nv in dsnv)
+                {
+                    //Lấy danh sách công việc của nhân viên
+                    var dscv = await AC.CongViec.Get(nv.DsIdCongViec);
+
+                    var tc = await AC.ToChuc.GetById(nv.IdToChuc);
+                    if (nv.IdHeThong == SystemInfo.HeThong.Id)
+                    {
+                         <div class="col-md-4 d-flex  mb-3">
+                            <div class="card w-100">
+                                <div class="card-header p-2">
+                                    @tc.Name - @nv.Name 
+                                    <a href="/nguoidung/nhanvien_hoso/@nv.Id" class="btn btn-primary btn-sm float-end">
+                                        Hồ sơ
+                                    </a>
+                                </div>
+                                @if (dscv != null && dscv.Count > 0)
+                                    {
+                                        
+                                        <div class="list-group">
+                                         @foreach(var cv in dscv)
+                                            {
+                                                <a href="/nguoidung/nhanvien_updatecongviec/@cv.Id" class="list-group-item d-flex justify-content-between align-items-center">
+                                                    @(cv.IdPhongBan!= null?( (await AC.PhongBan.GetById(cv.IdPhongBan)).Name +" - "):"") @cv.LoaiCongViec  
+                                                    <span class="badge bg-primary rounded-pill">@cv.SoLuongThongBaoNhanMoi</span>
+                                                </a>
+                                        
+                                            }
+                                    
+                                         
+                                        </div>
+                                    }                                
+                            </div>
+                        </div>
+                    }
+                    
+                    
+                }
+            </div>
+
+            
+
+            @if (dstbcv.Count > 0)
+            {
+                dstbcv = dstbcv.OrderBy(c => c.UpdatedAt).ToList();
+
+                
+                <div class="row">
+                    @foreach(var cv in dstbcv)
+                    {
+                        var nv = await AC.NhanVien.GetById(cv.IdNhanVien);
+                        
+                       
+                        
+                    }
+                </div>
+
+                
+            }
+
+            
+        </div>
+       
+   
+    </section>
+} else
+{
+    <section id="congviec" style="padding-top:60px;">
+        <div class="container-fluid">
+            <div class="row justify-content-md-center">
+              
+                <div class="col-md-4">
+                    <div class="card text-center mt-5">
+                        <div class="card-body">
+                            HÃY ĐĂNG NHẬP ĐỂ ĐẾN CƠ QUAN
+                        </div>
+                        <div class="card-body">
+                            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                            {
+               
+                              <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
+                                <input type="number" class="form-control text-center" id="lg_InputNumber" name="Phone">
+                              </div>
+                              <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Password</label>
+                                <input type="password" class="form-control text-center" id="lg_InputPassword1" name="Password">
+                              </div>
+                              
+                              <input type="hidden" name="returnUrl" value="@Context.Request.Path" >
+                              <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+
