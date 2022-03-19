@@ -44,11 +44,24 @@ namespace Xcomp.Api.Controllers.V1_0
         }
 
         [HttpGet("get-list-CongViec-by-IdNhanVien")]
-        public async Task<ExcuteResult> GetCongViecByNhanVien( string idNhanVien)
+        public async Task<ExcuteResult> GetCongViecByNhanVien(string idNhanVien)
         {
-            var lsCongViec =(List<CongViec>) await _congViecRepository.GetAllAsync(cv => cv.IdNhanVien == idNhanVien && cv.IdHeThong == SystemInfo.HeThong.Id);
+            var lsCongViec = (List<CongViec>)await _congViecRepository.GetAllAsync(cv => cv.IdNhanVien == idNhanVien && cv.IdHeThong == SystemInfo.HeThong.Id);
             if (lsCongViec == null) return new ExcuteResult(false, "not exited");
             return new ExcuteResult(true, "", lsCongViec);
+        }
+
+        [HttpGet("get-list-congviec-by-system-anninh")]
+        public async Task<ExcuteResult> GetCongViecBySysTemSOS()
+        {
+            var nguoidung = await _nguoiDungRepository.GetByIdAsync(RequestUserId);
+            if (nguoidung.DsIdNhanVien != null)
+            {
+                var lsCongViec = (List<CongViec>)await _congViecRepository.GetAllAsync(cv => nguoidung.DsIdNhanVien.Contains(cv.IdNhanVien) && cv.IdHeThong == SystemInfo.HeThongAnNinh.Id);
+                if (lsCongViec == null) return new ExcuteResult(false, "not exited");
+                return new ExcuteResult(true, "", lsCongViec);
+            }
+            return new ExcuteResult(false);
         }
 
 

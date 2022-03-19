@@ -40,7 +40,7 @@ namespace Xcomp.Api.Controllers.V1_0
             _nguoiDungRepository = nguoiDungRepository;
             _uow = uow;
             _mapper = mapper;
-        }  
+        }
         [HttpGet("SendNoti-SoS")]
         public async Task<ExcuteResult> GetAsync(string idti)
         {
@@ -78,7 +78,7 @@ namespace Xcomp.Api.Controllers.V1_0
                 var dsApp = (List<App>)await _appRepository.GetAllAsync(app => dsIDng.Contains(app.IdNguoiDung));
 
 
-                return new ExcuteResult(Result: sendNoti(dsApp, nd.Name));
+                return new ExcuteResult(Result: sendNotis(dsApp, nd.Name));
             }
             catch (Exception ex)
             {
@@ -87,22 +87,29 @@ namespace Xcomp.Api.Controllers.V1_0
 
         }
 
-        private static string sendNoti(List<App> dsApp, string name)
+        private List<string> sendNotis(List<App> dsApp, string name)
         {
-            var dsToken = new List<string>();
+            var res = new List<string>();
             dsApp.ForEach(app =>
             {
                 if (app.AppTokens != null)
                 {
                     app.AppTokens.ForEach(token =>
                     {
-                        dsToken.Add(token.AppToken);
+                        res.Add(sendNoti(token.AppToken, name));
                     });
+
+
                 }
             });
+            return res;
+
+        }
+        private string sendNoti(string token, string name)
+        {
             var data = new
             {
-                to = dsToken,
+                to = token,
                 title = "có Yêu cầu SOS",
                 body = name + " cần trợ giúp SOS"
             };
@@ -117,5 +124,6 @@ namespace Xcomp.Api.Controllers.V1_0
             return response.Content;
 
         }
+
     }
 }
